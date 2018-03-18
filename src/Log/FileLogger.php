@@ -68,7 +68,7 @@ class FileLogger {
             $output .= " : ";
             $output .= $message;
             $output .= "\n";
-            \file_put_contents(self::$path, $output);
+            \file_put_contents(self::$path, $output, \FILE_APPEND);
         }
     }
 
