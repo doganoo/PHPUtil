@@ -26,13 +26,13 @@
 namespace doganoo\PHPUtil\HTTP;
 
 /**
- * Class SESSION
+ * Class Session
  *
  * @package doganoo\PHPUtil\HTTP
  */
-class SESSION {
+class Session {
     /**
-     * SESSION constructor.
+     * Session constructor.
      */
     public function __construct() {
         /**
