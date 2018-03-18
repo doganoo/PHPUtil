@@ -1,0 +1,18 @@
+{
+  "name": "doganoo/php-util",
+  "description": "A collection of common classes and methods that I am usually working with",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Dogan Ucar",
+      "email": "dogan@dogan-ucar.de"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "doganoo\\PHPUtil\\": "src/"
+    }
+  },
+  "minimum-stability": "stable"
+}
