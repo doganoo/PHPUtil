@@ -25,10 +25,6 @@
 
 namespace doganoo\PHPUtil\System;
 
-
-namespace Core\Objects;
-
-
 use doganoo\PHPUtil\Exception\FileNotFoundException;
 use doganoo\PHPUtil\Exception\NoPathException;
 
