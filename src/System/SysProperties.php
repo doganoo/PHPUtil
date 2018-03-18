@@ -23,53 +23,63 @@
  * SOFTWARE.
  */
 
-namespace doganoo\PHPUtil\Log;
+namespace doganoo\PHPUtil\System;
+
+
+namespace Core\Objects;
+
+
+use doganoo\PHPUtil\Exception\FileNotFoundException;
+use doganoo\PHPUtil\Exception\NoPathException;
 
 /**
- * Class FileLogger
+ * Class SysProperties
  *
- * TODO add other log levels
- *
- * @package doganoo\PHPUtil\Log
+ * @package Core\Objects
  */
-class FileLogger {
-    private static $level = 0;
-    private static $path = __DIR__ . "/logfile.log";
+class SysProperties {
+    /**
+     * @var null
+     */
+    private static $path = null;
 
     /**
-     * Logger constructor prevents class instantiation
+     * @param string $path
      */
-    private function __construct() {
-    }
-
-    public static function setPath(string $path) {
+    public static function setPropertiesPath(string $path) {
         self::$path = $path;
     }
 
     /**
-     * logs a message with log level DEBUG
-     *
-     * @param $message
+     * @param string $index
+     * @return string
+     * @throws FileNotFoundException
+     * @throws NoPathException
      */
-    public static function debug($message) {
-        self::log($message, 1);
-    }
-
-    /**
-     * logs a message to the console
-     *
-     * @param string $message
-     * @param int    $level
-     */
-    private static function log(string $message, int $level) {
-        $output = "";
-        if ($level >= self::$level) {
-            $output .= (new \DateTime())->format("Y-m-d H:i:s");
-            $output .= " : ";
-            $output .= $message;
-            $output .= "\n";
-            \file_put_contents("logfile.log", $output);
+    public function read(string $index): string {
+        $index = \trim($index);
+        $properties = $this->getProperties();
+        if (isset($properties[$index])) {
+            return $properties[$index];
+        } else {
+            throw new \InvalidArgumentException();
         }
     }
 
+    /**
+     * @return array
+     * @throws FileNotFoundException
+     * @throws NoPathException
+     */
+    private function getProperties(): array {
+        if (self::$path === null) {
+            throw new NoPathException();
+        }
+        if (!\is_file(self::$path)) {
+            throw new FileNotFoundException();
+        }
+        $result = parse_ini_file(self::$path);
+
+        return $result;
+    }
 }

@@ -23,53 +23,9 @@
  * SOFTWARE.
  */
 
-namespace doganoo\PHPUtil\Log;
+namespace doganoo\PHPUtil\Exception;
 
-/**
- * Class FileLogger
- *
- * TODO add other log levels
- *
- * @package doganoo\PHPUtil\Log
- */
-class FileLogger {
-    private static $level = 0;
-    private static $path = __DIR__ . "/logfile.log";
 
-    /**
-     * Logger constructor prevents class instantiation
-     */
-    private function __construct() {
-    }
-
-    public static function setPath(string $path) {
-        self::$path = $path;
-    }
-
-    /**
-     * logs a message with log level DEBUG
-     *
-     * @param $message
-     */
-    public static function debug($message) {
-        self::log($message, 1);
-    }
-
-    /**
-     * logs a message to the console
-     *
-     * @param string $message
-     * @param int    $level
-     */
-    private static function log(string $message, int $level) {
-        $output = "";
-        if ($level >= self::$level) {
-            $output .= (new \DateTime())->format("Y-m-d H:i:s");
-            $output .= " : ";
-            $output .= $message;
-            $output .= "\n";
-            \file_put_contents("logfile.log", $output);
-        }
-    }
+class NoPathException extends \Exception {
 
 }
