@@ -25,8 +25,6 @@
 
 namespace doganoo\PHPUtil\Classloader;
 
-use doganoo\Exception\FileNotFoundException;
-
 /**
  * Class Autoloader
  *
@@ -61,16 +59,13 @@ class Autoloader {
 
     /**
      * @param $className
-     * @throws FileNotFoundException
      */
     private function loadCore($className) {
         $parts = explode('\\', $className);
         $clazzName = end($parts);
         $file = $this->findFile($this->path, $clazzName);
         if (is_file($file)) {
-            include $file;
-        } else {
-            throw new FileNotFoundException();
+            require_once $file;
         }
     }
 
