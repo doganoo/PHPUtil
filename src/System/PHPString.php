@@ -30,7 +30,7 @@ namespace doganoo\PHPUtil\System;
  *
  * @package doganoo\PHPUtil\System
  */
-class PString {
+class PHPString {
     /**
      * @var string
      */
@@ -52,7 +52,7 @@ class PString {
      * @return bool
      */
     public function equals($value) {
-        if ($value instanceof PString) {
+        if ($value instanceof PHPString) {
             $value = $value->getValue();
         }
         return strcmp($this->value, $value) === 0;
@@ -83,7 +83,7 @@ class PString {
      * @return bool
      */
     public function equalsIgnoreCase($value) {
-        if ($value instanceof PString) {
+        if ($value instanceof PHPString) {
             $value = $value->getValue();
         }
         return strcasecmp($this->value, $value) === 0;
