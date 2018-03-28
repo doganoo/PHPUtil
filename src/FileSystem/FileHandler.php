@@ -23,73 +23,70 @@
  * SOFTWARE.
  */
 
-namespace doganoo\PHPUtil\Log;
-
-use doganoo\PHPUtil\FileSystem\FileHandler;
+namespace doganoo\PHPUtil\FileSystem;
 
 /**
- * Class FileLogger
+ * Class FileHandler
  *
- * TODO add other log levels
- *
- * @package doganoo\PHPUtil\Log
+ * @package doganoo\PHPUtil\FileSystem
  */
-class FileLogger {
-    /** @var int $level */
-    private static $level = 0;
+class FileHandler {
     /** @var string $path */
-    private static $path = __DIR__ . "/logfile.log";
+    private $path = null;
 
     /**
-     * Logger constructor prevents class instantiation
+     * FileHandler constructor.
+     *
+     * @param $path
      */
-    private function __construct() {
+    public function __construct($path) {
+        $this->path = $path;
     }
 
     /**
-     * logs a message with log level DEBUG
+     * creates a file
      *
-     * @param $message
+     * @return bool
      */
-    public static function debug($message) {
-        self::log($message, 1);
-    }
-
-    /**
-     * logs a message to the console
-     *
-     * @param string $message
-     * @param int    $level
-     */
-    private static function log(string $message, int $level) {
-        $fileHandler = new FileHandler(self::getPath());
-        $fileHandler->forceCreate();
-        $output = "";
-        if ($level >= self::$level) {
-            $output .= (new \DateTime())->format("Y-m-d H:i:s");
-            $output .= " : ";
-            $output .= $message;
-            $output .= "\n";
-            \file_put_contents(self::$path, $output, \FILE_APPEND);
+    public function create(): bool {
+        if ($this->isFile()) {
+            return \touch($this->path);
         }
+        return false;
     }
 
     /**
-     * returns the log path
+     * is a file or not
      *
-     * @return string
+     * @return bool
      */
-    public static function getPath(): string {
-        return self::$path;
+    public function isFile(): bool {
+        return \is_file($this->path);
     }
 
     /**
-     * sets the log path
+     * forces a file creation
      *
-     * @param string $path
+     * @return bool
      */
-    public static function setPath(string $path) {
-        self::$path = $path;
+    public function forceCreate(): bool {
+        if (!$this->isFile()) {
+            return \mkdir($this->path, 0744, true);
+        }
+        if ($this->isFile() && !$this->isWritable()) {
+            $user = \get_current_user();
+            return \chown($this->path, $user);
+        }
+        return false;
+    }
+
+    /**
+     * checks whether the file is writable or not
+     *
+     * @return bool
+     */
+    public function isWritable(): bool {
+        return \is_writable($this->path);
     }
 
 }
