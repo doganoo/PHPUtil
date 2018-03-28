@@ -57,7 +57,12 @@ class MySQLConnector implements IStorageConnector {
         if (!$this->hasMinimumCredentials()) {
             throw new InvalidCredentialsException();
         }
-        $this->mysqli = new \mysqli();
+        $this->mysqli = new \mysqli(
+            $this->credentials["servername"]
+            , $this->credentials["username"]
+            , $this->credentials["password"]
+            , $this->credentials["dbname"]
+        );
         return $this->mysqli->connect_error !== null;
     }
 
