@@ -52,7 +52,7 @@ class FileLogger {
      * @param $message
      */
     public static function debug($message) {
-        self::log($message, 1);
+        self::log($message, 0);
     }
 
     /**
@@ -90,6 +90,15 @@ class FileLogger {
      */
     public static function setPath(string $path) {
         self::$path = $path;
+    }
+
+    /**
+     * logs a message with log level INFO
+     *
+     * @param $message
+     */
+    public static function info($message) {
+        self::log($message, 1);
     }
 
 }
