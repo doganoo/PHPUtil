@@ -121,6 +121,6 @@ class MySQLConnector implements IStorageConnector {
         if (!$this->hasMinimumCredentials()) {
             return false;
         }
-        return $this->mysqli === null || $this->mysqli->connect_error !== null;
+        return $this->mysqli !== null || $this->mysqli->connect_error !== null;
     }
 }
