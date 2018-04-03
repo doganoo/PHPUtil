@@ -32,11 +32,11 @@ use doganoo\PHPUtil\Exception\InvalidCredentialsException;
  *
  * @package doganoo\PHPUtil\Storage
  */
-class MySQLConnector implements IStorageConnector {
+class PDOConnector implements IStorageConnector {
     /** @var array $credentials */
     private $credentials = null;
-    /** @var \mysqli $mysqli */
-    private $mysqli = null;
+    /** @var \PDO $mysqli */
+    private $pdo = null;
 
     /**
      * sets the credentials used to connect against the database
@@ -57,13 +57,14 @@ class MySQLConnector implements IStorageConnector {
         if (!$this->hasMinimumCredentials()) {
             throw new InvalidCredentialsException();
         }
-        $this->mysqli = new \mysqli(
-            $this->credentials["servername"]
-            , $this->credentials["username"]
-            , $this->credentials["password"]
-            , $this->credentials["dbname"]
+        $host = $this->credentials["servername"];
+        $db = $this->credentials["dbname"];
+        $dsn = "mysql:host=$host;dbname=$db;charset=utf-8";
+        $this->pdo = new \PDO($dsn,
+            $this->credentials["username"],
+            $this->credentials["password"]
         );
-        return $this->mysqli->connect_error !== null;
+        return $this->pdo !== null;
     }
 
     /**
@@ -93,14 +94,14 @@ class MySQLConnector implements IStorageConnector {
      * @return bool
      */
     public function disconnect(): bool {
-        $this->mysqli = null;
+        $this->pdo = null;
         return true;
     }
 
     /**
      * returns the connection
      *
-     * @return \mysqli|null
+     * @return \PDO|null
      */
     public function getConnection() {
         if (!$this->hasMinimumCredentials()) {
@@ -109,7 +110,7 @@ class MySQLConnector implements IStorageConnector {
         if (!$this->testConnection()) {
             return null;
         }
-        return $this->mysqli;
+        return $this->pdo;
     }
 
     /**
@@ -121,6 +122,6 @@ class MySQLConnector implements IStorageConnector {
         if (!$this->hasMinimumCredentials()) {
             return false;
         }
-        return $this->mysqli !== null || $this->mysqli->connect_error !== null;
+        return $this->pdo !== null || $this->pdo->errorInfo() === [];
     }
 }
