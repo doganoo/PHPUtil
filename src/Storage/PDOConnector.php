@@ -59,7 +59,7 @@ class PDOConnector implements IStorageConnector {
         }
         $host = $this->credentials["servername"];
         $db = $this->credentials["dbname"];
-        $dsn = "mysql:host=$host;dbname=$db;charset=utf-8";
+        $dsn = "mysql:host=$host;dbname=$db;charset=utf8";
         $this->pdo = new \PDO($dsn,
             $this->credentials["username"],
             $this->credentials["password"]

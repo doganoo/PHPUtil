@@ -101,4 +101,13 @@ class FileLogger {
         self::log($message, 1);
     }
 
+    /**
+     * logs a message with log level WARN
+     *
+     * @param $message
+     */
+    public static function warn($message) {
+        self::log($message, 2);
+    }
+
 }
