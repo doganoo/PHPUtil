@@ -110,4 +110,22 @@ class FileLogger {
         self::log($message, 2);
     }
 
+    /**
+     * logs a message with log level ERROR
+     *
+     * @param $message
+     */
+    public static function error($message) {
+        self::log($message, 3);
+    }
+
+    /**
+     * logs a message with log level FATAL
+     *
+     * @param $message
+     */
+    public static function fatal($message) {
+        self::log($message, 4);
+    }
+
 }
