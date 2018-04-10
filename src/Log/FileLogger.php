@@ -69,7 +69,7 @@ class FileLogger {
             $output .= (new \DateTime())->format("Y-m-d H:i:s");
             $output .= " : ";
             $output .= $message;
-            $output .= "\n";
+            $output .= \PHP_EOL;
             \file_put_contents(self::$path, $output, \FILE_APPEND);
         }
     }

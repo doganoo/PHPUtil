@@ -61,7 +61,7 @@ class Logger {
             echo (new \DateTime())->format("Y-m-d H:i:s");
             echo " : ";
             echo $message;
-            echo "\n";
+            echo \PHP_EOL;
         }
     }
 
