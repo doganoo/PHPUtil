@@ -39,11 +39,22 @@ class FileLogger {
     private static $level = 0;
     /** @var string $path */
     private static $path = __DIR__ . "/logfile.log";
+    /** @var string $EOL */
+    private static $EOL = "\n";
 
     /**
      * Logger constructor prevents class instantiation
      */
     private function __construct() {
+    }
+
+    /**
+     * sets the end of line after a message is logged
+     *
+     * @param string $eol
+     */
+    public static function setEOL(string $eol) {
+        self::$EOL = $eol;
     }
 
     /**
@@ -69,7 +80,7 @@ class FileLogger {
             $output .= (new \DateTime())->format("Y-m-d H:i:s");
             $output .= " : ";
             $output .= $message;
-            $output .= \PHP_EOL;
+            $output .= self::$EOL;
             \file_put_contents(self::$path, $output, \FILE_APPEND);
         }
     }

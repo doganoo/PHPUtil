@@ -33,12 +33,24 @@ namespace doganoo\PHPUtil\Log;
  * @package doganoo\PHPUtil\Log
  */
 class Logger {
+    /** @var int $level */
     private static $level = 0;
+    /** @var string $EOL */
+    private static $EOL = "\n";
 
     /**
      * Logger constructor prevents class instantiation
      */
     private function __construct() {
+    }
+
+    /**
+     * sets the end of line after a message is logged
+     *
+     * @param string $eol
+     */
+    public static function setEOL(string $eol) {
+        self::$EOL = $eol;
     }
 
     /**
@@ -61,7 +73,7 @@ class Logger {
             echo (new \DateTime())->format("Y-m-d H:i:s");
             echo " : ";
             echo $message;
-            echo \PHP_EOL;
+            echo self::$EOL;
         }
     }
 

@@ -89,13 +89,17 @@ class PDOConnector implements IStorageConnector {
     }
 
     /**
-     * disconnects the connection
+     * prepares a SQL statement
      *
-     * @return bool
+     * @param string $sql
+     * @return null|\PDOStatement
      */
-    public function disconnect(): bool {
-        $this->pdo = null;
-        return true;
+    public function prepare(string $sql): ?\PDOStatement {
+        $statement = $this->getConnection()->prepare($sql);
+        if ($statement === false) {
+            return null;
+        }
+        return $statement;
     }
 
     /**
@@ -123,5 +127,15 @@ class PDOConnector implements IStorageConnector {
             return false;
         }
         return $this->pdo !== null || $this->pdo->errorInfo() === [];
+    }
+
+    /**
+     * disconnects the connection
+     *
+     * @return bool
+     */
+    public function disconnect(): bool {
+        $this->pdo = null;
+        return true;
     }
 }
