@@ -58,6 +58,29 @@ class FileLogger {
     }
 
     /**
+     * setting the log level. The level can be one of:
+     *
+     * <ul>0 = DEBUG</ul>
+     * <ul>1 = INFO</ul>
+     * <ul>2 = WARN</ul>
+     * <ul>3 = ERROR</ul>
+     * <ul>4 = FATAL</ul>
+     *
+     * if $level does not match to any of these levels, the
+     * log level will be initialized to ERROR (3).
+     *
+     * @param int $level
+     */
+    public static function setLogLevel(int $level): void {
+        if ($level >= 0 && $level <= 4) {
+            self::$level = $level;
+        } else {
+            self::$level = 3;
+        }
+
+    }
+
+    /**
      * logs a message with log level DEBUG
      *
      * @param $message

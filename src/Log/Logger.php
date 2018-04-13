@@ -26,9 +26,9 @@
 namespace doganoo\PHPUtil\Log;
 
 /**
- * Class Logger
+ * Class
  *
- * TODO add other log levels
+ * TODO enable custom log format
  *
  * @package doganoo\PHPUtil\Log
  */
@@ -37,6 +37,8 @@ class Logger {
     private static $level = 0;
     /** @var string $EOL */
     private static $EOL = "\n";
+    /** @var bool $logEnabled */
+    private static $logEnabled = true;
 
     /**
      * Logger constructor prevents class instantiation
@@ -51,6 +53,40 @@ class Logger {
      */
     public static function setEOL(string $eol) {
         self::$EOL = $eol;
+    }
+
+    /**
+     * defines whether logging is enabled or not. Since this logger class
+     * logs on the console, it should be possible to deactivate logging
+     * (in production, for example).
+     *
+     * @param bool $logEnabled
+     */
+    public static function setLogEnabled(bool $logEnabled): void {
+        self::$logEnabled = $logEnabled;
+    }
+
+    /**
+     * setting the log level. The level can be one of:
+     *
+     * <ul>0 = DEBUG</ul>
+     * <ul>1 = INFO</ul>
+     * <ul>2 = WARN</ul>
+     * <ul>3 = ERROR</ul>
+     * <ul>4 = FATAL</ul>
+     *
+     * if $level does not match to any of these levels, the
+     * log level will be initialized to ERROR (3).
+     *
+     * @param int $level
+     */
+    public static function setLogLevel(int $level): void {
+        if ($level >= 0 && $level <= 4) {
+            self::$level = $level;
+        } else {
+            self::$level = 3;
+        }
+
     }
 
     /**
@@ -69,7 +105,7 @@ class Logger {
      * @param int    $level
      */
     private static function log(string $message, int $level) {
-        if ($level >= self::$level) {
+        if ($level >= self::$level && self::$logEnabled) {
             echo (new \DateTime())->format("Y-m-d H:i:s");
             echo " : ";
             echo $message;
