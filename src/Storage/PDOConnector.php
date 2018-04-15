@@ -127,7 +127,13 @@ class PDOConnector implements IStorageConnector {
         if (!$this->hasMinimumCredentials()) {
             return false;
         }
-        return $this->pdo !== null || $this->pdo->errorInfo() === [];
+        if ($this->pdo === null){
+            return false;
+        }
+        if ($this->pdo->errorInfo() === []){
+            return false;
+        }
+        return true;
     }
 
     /**
