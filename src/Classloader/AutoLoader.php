@@ -63,34 +63,20 @@ class Autoloader {
     private function loadCore($className) {
         $parts = explode('\\', $className);
         $clazzName = end($parts);
-        $file = $this->findFile($this->path, $clazzName);
-        if (is_file($file)) {
-            require_once $file;
-        }
-    }
+        $iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($this->path), \RecursiveIteratorIterator::SELF_FIRST);
 
-    /**
-     * finds a file in the given dir
-     *
-     * @param $dirName
-     * @param $fileName
-     * @return string
-     */
-    private function findFile($dirName, $fileName) {
-        $dirs = glob($dirName . '*');
-        $file = "";
-        foreach ($dirs as $d) {
-            if (is_file($d)) {
-                if (basename($d) === "$fileName.php") {
-                    return "$dirName$fileName.php";
-                }
-            } else if (is_dir($d)) {
-                $tmp = $this->findFile($d . "/", $fileName);
-                if ($tmp != "") {
-                    $file = $tmp;
-                }
+        /**
+         * @var string        $key
+         * @var  \SplFileInfo $path
+         */
+        foreach ($iterator as $key => $path) {
+            if ($path->isDir()) {
+                continue;
+            }
+            if ("$clazzName.php" === $path->getFilename()) {
+                require_once $path->getRealPath();
+                break;
             }
         }
-        return $file;
     }
 }
