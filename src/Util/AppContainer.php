@@ -80,7 +80,7 @@ class AppContainer {
      */
     public static function get(string $name) {
         $map = self::getInstance();
-        if ($map->containsKey($name)) {
+        if (!$map->containsKey($name)) {
             return null;
         }
         /** @var Node $node */
