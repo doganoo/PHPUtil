@@ -90,4 +90,14 @@ class AppContainer {
         }
         return $node->getValue()();
     }
+
+    /**
+     * returns all class names as an array
+     *
+     * @return array
+     */
+    public function getClasses(): array {
+        $classNames = self::$map->keySet();
+        return $classNames;
+    }
 }
