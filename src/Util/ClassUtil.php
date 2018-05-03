@@ -44,7 +44,7 @@ class ClassUtil {
      * @return null|string
      * @throws \ReflectionException
      */
-    public function getClassName($object): ?string {
+    public static function getClassName($object): ?string {
         if (null === $object) {
             return null;
         }
