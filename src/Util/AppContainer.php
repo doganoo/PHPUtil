@@ -96,7 +96,7 @@ class AppContainer {
      *
      * @return array
      */
-    public function getClasses(): array {
+    public static function getClasses(): array {
         $classNames = self::$map->keySet();
         return $classNames;
     }
