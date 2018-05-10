@@ -127,10 +127,10 @@ class PDOConnector implements IStorageConnector {
         if (!$this->hasMinimumCredentials()) {
             return false;
         }
-        if ($this->pdo === null){
+        if ($this->pdo === null) {
             return false;
         }
-        if ($this->pdo->errorInfo() === []){
+        if ($this->pdo->errorInfo() === []) {
             return false;
         }
         return true;
@@ -144,5 +144,13 @@ class PDOConnector implements IStorageConnector {
     public function disconnect(): bool {
         $this->pdo = null;
         return true;
+    }
+
+    /**
+     * @param null $name
+     * @return string
+     */
+    public function getLastInsertId($name = null) {
+        return $this->pdo->lastInsertId($name);
     }
 }
