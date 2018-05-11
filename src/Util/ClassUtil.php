@@ -54,4 +54,34 @@ class ClassUtil {
         return (new \ReflectionClass($object))->getName();
     }
 
+    /**
+     * returns the unserialized object if the string is serialized.
+     * Otherwise, it returns null.
+     *
+     * @param string $string
+     * @return mixed|null
+     */
+    public static function unserialize(string $string) {
+        if (ClassUtil::isSerialized($string)) {
+            return \unserialize($string);
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * whether the string is an serialized object or not
+     *
+     * @param string $string
+     * @return bool
+     */
+    public static function isSerialized(string $string): bool {
+        $data = @unserialize($string);
+        if (false === $data) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
 }
