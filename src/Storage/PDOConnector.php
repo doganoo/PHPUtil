@@ -37,6 +37,8 @@ class PDOConnector implements IStorageConnector {
     private $credentials = null;
     /** @var \PDO $mysqli */
     private $pdo = null;
+    /** @var \PDOStatement $statement */
+    private $statement = null;
 
     /**
      * sets the credentials used to connect against the database
@@ -100,6 +102,7 @@ class PDOConnector implements IStorageConnector {
         if ($statement === false) {
             return null;
         }
+        $this->statement = $statement;
         return $statement;
     }
 
@@ -152,5 +155,18 @@ class PDOConnector implements IStorageConnector {
      */
     public function getLastInsertId($name = null) {
         return $this->pdo->lastInsertId($name);
+    }
+
+    /**
+     * Binds a parameter to the specified variable name
+     *
+     * @param string $param
+     * @param        $value
+     * @param int    $dataType
+     * @param null   $length
+     * @param null   $driverOptions
+     */
+    public function bindParam(string $param, $value, $dataType = \PDO::PARAM_STR, $length = null, $driverOptions = null) {
+        $this->statement->bindParam($param, $value, $dataType, $length, $driverOptions);
     }
 }
