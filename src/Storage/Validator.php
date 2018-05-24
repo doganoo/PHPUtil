@@ -57,7 +57,10 @@ class Validator {
         , bool $mayEmpty = false) {
         $valid = false;
         if ($dataType === self::INTEGER) {
-            $valid |= \is_numeric($value);
+            $valid |= \is_int($value);
+        }
+        if ($dataType === self::DOUBLE) {
+            $valid |= \is_double($value) || \is_float($value);
         }
         if ($dataType === self::VARCHAR) {
             $valid |= \strlen($value) <= $length;
