@@ -42,6 +42,27 @@ class Validator {
     }
 
     /**
+     * @param array $array
+     * @param int   $dataType
+     * @param int   $length
+     * @param bool  $mayNull
+     * @param bool  $mayEmpty
+     * @return bool
+     */
+    public static function basicArray(
+        array $array
+        , int $dataType = self::VARCHAR
+        , int $length = 0
+        , bool $mayNull = false
+        , bool $mayEmpty = false): bool {
+        $valid = false;
+        foreach ($array as $key => $value) {
+            $valid |= Validator::basic($value, $dataType, $length, $mayEmpty, $mayEmpty);
+        }
+        return $valid;
+    }
+
+    /**
      * @param      $value
      * @param int  $dataType
      * @param int  $length
@@ -54,7 +75,7 @@ class Validator {
         , int $dataType = self::VARCHAR
         , int $length = 0
         , bool $mayNull = false
-        , bool $mayEmpty = false) {
+        , bool $mayEmpty = false): bool {
         $valid = false;
         if ($dataType === self::INTEGER) {
             $valid |= \is_int($value);
@@ -72,6 +93,5 @@ class Validator {
             $valid |= !\is_null($value);
         }
         return $valid;
-
     }
 }
