@@ -57,7 +57,7 @@ class Validator {
         , bool $mayEmpty = false): bool {
         $valid = false;
         foreach ($array as $key => $value) {
-            $valid |= Validator::basic($value, $dataType, $length, $mayEmpty, $mayEmpty);
+            $valid |= Validator::basic($value, $dataType, $length, $mayEmpty, $mayNull);
         }
         return $valid;
     }

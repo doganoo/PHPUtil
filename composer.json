@@ -16,12 +16,6 @@
   },
   "minimum-stability": "stable",
   "require": {
-    "doganoo/php-algorithms": "dev-master"
-  },
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "https://github.com/doganoo/PHPAlgorithms.git"
-    }
-  ]
+    "doganoo/php-algorithms": "0.0.1"
+  }
 }
