@@ -14,7 +14,6 @@
       "doganoo\\PHPUtil\\": "src/"
     }
   },
-  "minimum-stability": "stable",
   "require": {
     "doganoo/php-algorithms": "0.0.1"
   }
