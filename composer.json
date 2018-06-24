@@ -15,6 +15,6 @@
     }
   },
   "require": {
-    "doganoo/php-algorithms": "0.0.1"
+    "doganoo/php-algorithms": "^0.0.1"
   }
 }
