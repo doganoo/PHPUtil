@@ -31,6 +31,7 @@ namespace doganoo\PHPUtil\Util;
  * @package doganoo\PHPUtil\Util
  */
 class ClassUtil {
+
     /**
      * ClassUtil constructor.
      */
@@ -45,13 +46,30 @@ class ClassUtil {
      * @throws \ReflectionException
      */
     public static function getClassName($object): ?string {
-        if (null === $object) {
-            return null;
-        }
-        if (!\is_object($object)) {
+        $validObject = ClassUtil::isValidObject($object);
+        if (!$validObject) {
             return null;
         }
         return (new \ReflectionClass($object))->getName();
+    }
+
+    /**
+     * validates an object. $object has to be:
+     *
+     *      1. not null
+     *      2. an object verified by \is_object()
+     *
+     * @param $object
+     * @return bool
+     */
+    private static function isValidObject($object): bool {
+        if (null === $object) {
+            return false;
+        }
+        if (!\is_object($object)) {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -81,6 +99,31 @@ class ClassUtil {
             return false;
         } else {
             return true;
+        }
+    }
+
+    /**
+     * returns all properties of an object
+     *
+     * TODO let caller define the visibility
+     *
+     * @param      $object
+     * @param bool $asString
+     * @return null|\ReflectionProperty[]|string
+     * @throws \ReflectionException
+     */
+    public static function getAllProperties($object, bool $asString = true) {
+        $validObject = ClassUtil::isValidObject($object);
+        if (!$validObject) {
+            return null;
+        }
+        $reflectionClass = new \ReflectionClass($object);
+        $properties = $reflectionClass->getProperties();
+
+        if ($asString) {
+            return ArrayUtil::arrayToString($properties);
+        } else {
+            return $properties;
         }
     }
 
