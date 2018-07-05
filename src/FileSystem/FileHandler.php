@@ -89,4 +89,16 @@ class FileHandler {
         return \is_writable($this->path);
     }
 
+    /**
+     * returns the file content if file is available. Otherwise null
+     *
+     * @return null|string
+     */
+    public function getContent(): ?string {
+        if ($this->isFile()) {
+            return \file_get_contents($this->path);
+        }
+        return null;
+    }
+
 }
