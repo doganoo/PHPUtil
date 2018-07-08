@@ -26,7 +26,7 @@
 namespace doganoo\PHPUtil\Util;
 
 
-use doganoo\PHPAlgorithms\Datastructure\lists\Node;
+use doganoo\PHPAlgorithms\Datastructure\Lists\Node;
 use doganoo\PHPAlgorithms\Datastructure\Maps\HashMap;
 
 /**
@@ -52,6 +52,7 @@ class AppContainer {
      * @param callable $callable
      * @throws \doganoo\PHPAlgorithms\common\Exception\InvalidKeyTypeException
      * @throws \doganoo\PHPAlgorithms\common\Exception\UnsupportedKeyTypeException
+     * @throws \ReflectionException
      */
     public static function add(string $name, callable $callable) {
         $map = self::getInstance();

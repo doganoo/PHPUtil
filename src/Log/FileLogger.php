@@ -35,12 +35,24 @@ use doganoo\PHPUtil\FileSystem\FileHandler;
  * @package doganoo\PHPUtil\Log
  */
 class FileLogger {
+    /** @var int DEBUG log level 0 */
+    public const DEBUG = 0;
+    /** @var int INFO log level 1 */
+    public const INFO = 1;
+    /** @var int WARN log level 2 */
+    public const WARN = 2;
+    /** @var int ERROR log level 3 */
+    public const ERROR = 3;
+    /** @var int FATAL log level 4 */
+    public const FATAL = 4;
     /** @var int $level */
     private static $level = 0;
     /** @var string $path */
     private static $path = __DIR__ . "/logfile.log";
     /** @var string $EOL */
     private static $EOL = "\n";
+    /** @var bool $logEnabled */
+    private static $logEnabled = true;
 
     /**
      * Logger constructor prevents class instantiation
@@ -58,6 +70,15 @@ class FileLogger {
     }
 
     /**
+     * defines whether logging is enabled or not.
+     *
+     * @param bool $logEnabled
+     */
+    public static function setLogEnabled(bool $logEnabled): void {
+        self::$logEnabled = $logEnabled;
+    }
+
+    /**
      * setting the log level. The level can be one of:
      *
      * <ul>0 = DEBUG</ul>
@@ -72,10 +93,10 @@ class FileLogger {
      * @param int $level
      */
     public static function setLogLevel(int $level): void {
-        if ($level >= 0 && $level <= 4) {
+        if ($level >= FileLogger::DEBUG && $level <= FileLogger::FATAL) {
             self::$level = $level;
         } else {
-            self::$level = 3;
+            self::$level = FileLogger::ERROR;
         }
 
     }
@@ -86,7 +107,7 @@ class FileLogger {
      * @param $message
      */
     public static function debug($message) {
-        self::log($message, 0);
+        self::log($message, FileLogger::DEBUG);
     }
 
     /**
@@ -96,15 +117,47 @@ class FileLogger {
      * @param int    $level
      */
     private static function log(string $message, int $level) {
-        $fileHandler = new FileHandler(self::getPath());
+        $backTrace = \debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+        $logLevelDescription = FileLogger::getLogLevelDescription($level);
+        $fileHandler = new FileHandler(FileLogger::getPath());
         $fileHandler->forceCreate();
         $output = "";
-        if ($level >= self::$level) {
+        if ($level >= self::$level
+            && self::$logEnabled
+            && $fileHandler->isFile()) {
             $output .= (new \DateTime())->format("Y-m-d H:i:s");
+            $output .= " : ";
+            $output .= $logLevelDescription;
+            $output .= " : ";
+            $output .= \json_encode($backTrace);
             $output .= " : ";
             $output .= $message;
             $output .= self::$EOL;
             \file_put_contents(self::$path, $output, \FILE_APPEND);
+        }
+    }
+
+    /**
+     * returns a string that describes the current log level
+     *
+     * @param int $level
+     * @return string
+     */
+    private static function getLogLevelDescription(int $level): string {
+        if ($level === Logger::DEBUG) {
+            return "debug";
+        }
+        if ($level === Logger::INFO) {
+            return "info";
+        }
+        if ($level === Logger::WARN) {
+            return "warn";
+        }
+        if ($level === Logger::ERROR) {
+            return "error";
+        }
+        if ($level === Logger::FATAL) {
+            return "fatal";
         }
     }
 
@@ -132,7 +185,7 @@ class FileLogger {
      * @param $message
      */
     public static function info($message) {
-        self::log($message, 1);
+        self::log($message, FileLogger::INFO);
     }
 
     /**
@@ -141,7 +194,7 @@ class FileLogger {
      * @param $message
      */
     public static function warn($message) {
-        self::log($message, 2);
+        self::log($message, FileLogger::WARN);
     }
 
     /**
@@ -150,7 +203,7 @@ class FileLogger {
      * @param $message
      */
     public static function error($message) {
-        self::log($message, 3);
+        self::log($message, FileLogger::ERROR);
     }
 
     /**
@@ -159,7 +212,7 @@ class FileLogger {
      * @param $message
      */
     public static function fatal($message) {
-        self::log($message, 4);
+        self::log($message, FileLogger::FATAL);
     }
 
 }

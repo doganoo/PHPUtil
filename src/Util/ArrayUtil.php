@@ -47,7 +47,11 @@ final class ArrayUtil {
     public static function arrayToString(array $array, $delimiter = ""): string {
         $string = "";
         foreach ($array as $value) {
-            $string .= $value . $delimiter;
+            if (\is_array($value)) {
+                $string .= ArrayUtil::arrayToString($value, $delimiter) . $delimiter;
+            } else {
+                $string .= $value . $delimiter;
+            }
         }
         return $string;
     }
