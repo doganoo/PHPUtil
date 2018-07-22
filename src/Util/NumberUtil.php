@@ -51,4 +51,14 @@ class NumberUtil {
         return \number_format($value, $decimals);
     }
 
+    /**
+     * returns an array with the elements
+     *
+     * @param int $number
+     * @return array
+     */
+    public static function intToArray(int $number): array {
+        return StringUtil::stringToArray($number);
+    }
+
 }
