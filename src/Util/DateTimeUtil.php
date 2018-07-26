@@ -26,11 +26,11 @@
 namespace doganoo\PHPUtil\Util;
 
 /**
- * Class NumberUtil
+ * Class DateTimeUtil
  *
  * @package doganoo\PHPUtil\Util
  */
-final class NumberUtil {
+final class DateTimeUtil {
     /**
      * prevent from instantiation
      * StringUtil constructor.
@@ -39,27 +39,11 @@ final class NumberUtil {
     }
 
     /**
-     * returns the formatted number with grouped thousands
+     * returns the actual unix timestamp
      *
-     * @param     $value
-     * @param int $decimals
-     * @return null|string
+     * @return int
      */
-    public static function format($value, int $decimals = 2): ?string {
-        if (!\is_numeric($value)) {
-            return null;
-        }
-        return \number_format($value, $decimals);
+    public static function getUnixTimestamp(): int {
+        return (new \DateTime())->getTimestamp();
     }
-
-    /**
-     * returns an array with the elements
-     *
-     * @param int $number
-     * @return array
-     */
-    public static function intToArray(int $number): array {
-        return StringUtil::stringToArray($number);
-    }
-
 }

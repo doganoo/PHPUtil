@@ -30,10 +30,11 @@ namespace doganoo\PHPUtil\Util;
  *
  * @package doganoo\PHPUtil\Util
  */
-class ClassUtil {
+final class ClassUtil {
 
     /**
-     * ClassUtil constructor.
+     * prevent from instantiation
+     * StringUtil constructor.
      */
     private function __construct() {
     }

@@ -30,7 +30,7 @@ namespace doganoo\PHPUtil\Util;
  *
  * @package doganoo\PHPUtil\Util
  */
-class StringUtil {
+final class StringUtil {
     /**
      * prevent from instantiation
      * StringUtil constructor.

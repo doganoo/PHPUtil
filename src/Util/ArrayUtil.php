@@ -32,7 +32,8 @@ namespace doganoo\PHPUtil\Util;
  */
 final class ArrayUtil {
     /**
-     * ArrayUtil constructor.
+     * prevent from instantiation
+     * StringUtil constructor.
      */
     private function __construct() {
     }
