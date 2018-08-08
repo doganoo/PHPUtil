@@ -26,6 +26,7 @@
 namespace doganoo\PHPUtil\System;
 
 use doganoo\PHPUtil\Exception\FileNotFoundException;
+use doganoo\PHPUtil\Exception\InvalidPropertyStructureException;
 use doganoo\PHPUtil\Exception\NoPathException;
 
 /**
@@ -66,6 +67,7 @@ class SysProperties {
      * @return array
      * @throws FileNotFoundException
      * @throws NoPathException
+     * @throws InvalidPropertyStructureException
      */
     private function getProperties(): array {
         if (self::$path === null) {
@@ -74,8 +76,10 @@ class SysProperties {
         if (!\is_file(self::$path)) {
             throw new FileNotFoundException();
         }
-        $result = parse_ini_file(self::$path);
-
-        return $result;
+        $ini = parse_ini_file(self::$path);
+        if (false === $ini) {
+            throw new InvalidPropertyStructureException();
+        }
+        return $ini;
     }
 }
