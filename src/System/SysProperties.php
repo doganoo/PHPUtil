@@ -82,4 +82,15 @@ class SysProperties {
         }
         return $ini;
     }
+
+    /**
+     * @return int
+     * @throws FileNotFoundException
+     * @throws InvalidPropertyStructureException
+     * @throws NoPathException
+     */
+    public function size(): int {
+        $properties = $this->getProperties();
+        return \count($properties);
+    }
 }
