@@ -93,4 +93,16 @@ class SysProperties {
         $properties = $this->getProperties();
         return \count($properties);
     }
+
+    /**
+     * @return array
+     * @throws FileNotFoundException
+     * @throws InvalidPropertyStructureException
+     * @throws NoPathException
+     */
+    public function keySet(): array {
+        $array = $this->getProperties();
+        $array = \array_keys($array);
+        return $array;
+    }
 }
