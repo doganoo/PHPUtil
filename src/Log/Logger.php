@@ -44,12 +44,20 @@ class Logger {
     public const ERROR = 3;
     /** @var int FATAL log level 4 */
     public const FATAL = 4;
+    /** @var int SIMPLE */
+    public const SIMPLE = 0;
+    /** @var int NORMAL */
+    public const NORMAL = 1;
+    /** @var int DESCRIPTIVE */
+    public const DESCRIPTIVE = 2;
     /** @var int $level */
     private static $level = 0;
     /** @var string $EOL */
     private static $EOL = "\n";
     /** @var bool $logEnabled */
     private static $logEnabled = true;
+    /** @var int $mode */
+    private static $mode = Logger::SIMPLE;
 
     /**
      * Logger constructor prevents class instantiation
@@ -100,6 +108,21 @@ class Logger {
     }
 
     /**
+     * @param int $mode
+     * @return bool
+     */
+    public static function setMode(int $mode): bool {
+        if ($mode === Logger::SIMPLE
+            || $mode === Logger::NORMAL
+            || $mode === Logger::DESCRIPTIVE
+        ) {
+            Logger::$mode = $mode;
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * logs a message with log level DEBUG
      *
      * @param $message
@@ -118,13 +141,17 @@ class Logger {
         $backTrace = \debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
         $logLevelDescription = Logger::getLogLevelDescription($level);
 
+        $description = "";
+        $backTrace = \debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+        if (Logger::$mode === Logger::NORMAL) $description = $backTrace[0]["file"] . " : ";
+        if (Logger::$mode === Logger::DESCRIPTIVE) $description = \json_encode($backTrace) . " : ";;
+
         if ($level >= self::$level && self::$logEnabled) {
             echo (new \DateTime())->format("Y-m-d H:i:s");
             echo " : ";
             echo $logLevelDescription;
             echo " : ";
-            echo \json_encode($backTrace);
-            echo " : ";
+            echo $description;
             echo $message;
             echo self::$EOL;
         }

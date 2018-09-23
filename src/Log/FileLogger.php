@@ -45,6 +45,12 @@ class FileLogger {
     public const ERROR = 3;
     /** @var int FATAL log level 4 */
     public const FATAL = 4;
+    /** @var int SIMPLE */
+    public const SIMPLE = 0;
+    /** @var int NORMAL */
+    public const NORMAL = 1;
+    /** @var int DESCRIPTIVE */
+    public const DESCRIPTIVE = 2;
     /** @var int $level */
     private static $level = 0;
     /** @var string $path */
@@ -53,6 +59,8 @@ class FileLogger {
     private static $EOL = "\n";
     /** @var bool $logEnabled */
     private static $logEnabled = true;
+    /** @var int $mode */
+    private static $mode = FileLogger::SIMPLE;
 
     /**
      * Logger constructor prevents class instantiation
@@ -76,6 +84,21 @@ class FileLogger {
      */
     public static function setLogEnabled(bool $logEnabled): void {
         self::$logEnabled = $logEnabled;
+    }
+
+    /**
+     * @param int $mode
+     * @return bool
+     */
+    public static function setMode(int $mode): bool {
+        if ($mode === FileLogger::SIMPLE
+            || $mode === FileLogger::NORMAL
+            || $mode === FileLogger::DESCRIPTIVE
+        ) {
+            FileLogger::$mode = $mode;
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -117,7 +140,11 @@ class FileLogger {
      * @param int    $level
      */
     private static function log(string $message, int $level) {
+        $description = "";
         $backTrace = \debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+        if (FileLogger::$mode === FileLogger::NORMAL) $description = $backTrace[0]["file"] . " : ";
+        if (FileLogger::$mode === FileLogger::DESCRIPTIVE) $description = \json_encode($backTrace) . " : ";;
+
         $logLevelDescription = FileLogger::getLogLevelDescription($level);
         $fileHandler = new FileHandler(FileLogger::getPath());
         $fileHandler->forceCreate();
@@ -129,8 +156,7 @@ class FileLogger {
             $output .= " : ";
             $output .= $logLevelDescription;
             $output .= " : ";
-            $output .= \json_encode($backTrace);
-            $output .= " : ";
+            $output .= $description;
             $output .= $message;
             $output .= self::$EOL;
             \file_put_contents(self::$path, $output, \FILE_APPEND);
