@@ -62,7 +62,6 @@ final class StringUtil{
 	public function toUTF8(string $string): string{
 		$string = iconv('ASCII', 'UTF-8//IGNORE', $string);
 		return $string;
-		//		return \mb_convert_encoding($string, "UTF-8");
 	}
 
 	/**
