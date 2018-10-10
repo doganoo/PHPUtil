@@ -50,6 +50,30 @@ class PDOConnector implements IStorageConnector {
     }
 
     /**
+     * starts a database transaction
+     * @return bool
+     */
+    public function startTransaction(): bool {
+        return $this->pdo->beginTransaction();
+    }
+
+    /**
+     * commits a started database transaction
+     * @return bool
+     */
+    public function commit(): bool {
+        return $this->pdo->commit();
+    }
+
+    /**
+     * rolls a started transaction back
+     * @return bool
+     */
+    public function rollback(): bool {
+        return $this->pdo->rollBack();
+    }
+
+    /**
      * connects to the database
      *
      * @return bool
@@ -162,9 +186,9 @@ class PDOConnector implements IStorageConnector {
      *
      * @param string $param
      * @param        $value
-     * @param int    $dataType
-     * @param null   $length
-     * @param null   $driverOptions
+     * @param int $dataType
+     * @param null $length
+     * @param null $driverOptions
      */
     public function bindParam(string $param, $value, $dataType = \PDO::PARAM_STR, $length = null, $driverOptions = null) {
         $this->statement->bindParam($param, $value, $dataType, $length, $driverOptions);
