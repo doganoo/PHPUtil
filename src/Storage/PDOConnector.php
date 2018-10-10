@@ -39,6 +39,8 @@ class PDOConnector implements IStorageConnector {
     private $pdo = null;
     /** @var \PDOStatement $statement */
     private $statement = null;
+    /** @var bool $transactionExists */
+    private $transactionExists = false;
 
     /**
      * sets the credentials used to connect against the database
@@ -54,7 +56,12 @@ class PDOConnector implements IStorageConnector {
      * @return bool
      */
     public function startTransaction(): bool {
-        return $this->pdo->beginTransaction();
+        if ($this->transactionExists) {
+            return false;
+        }
+        $started = $this->pdo->beginTransaction();
+        $this->transactionExists = $started;
+        return $started;
     }
 
     /**
@@ -62,7 +69,12 @@ class PDOConnector implements IStorageConnector {
      * @return bool
      */
     public function commit(): bool {
-        return $this->pdo->commit();
+        if ($this->transactionExists) {
+            $commited = $this->pdo->commit();
+            $this->transactionExists = !$commited;
+            return $commited;
+        }
+        return false;
     }
 
     /**
@@ -70,7 +82,12 @@ class PDOConnector implements IStorageConnector {
      * @return bool
      */
     public function rollback(): bool {
-        return $this->pdo->rollBack();
+        if ($this->transactionExists) {
+            $rolledBack = $this->pdo->rollBack();
+            $this->transactionExists = !$rolledBack;
+            return $rolledBack;
+        }
+        return false;
     }
 
     /**
