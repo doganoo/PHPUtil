@@ -30,7 +30,7 @@ namespace doganoo\PHPUtil\Classloader;
  *
  * @package doganoo\PHPUtil\Classloader
  */
-class Autoloader {
+class AutoLoader {
     /**
      * @var string the path where the auto loader should look up
      */
