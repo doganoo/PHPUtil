@@ -15,6 +15,7 @@
     }
   },
   "require": {
-    "doganoo/php-algorithms": "*"
+    "doganoo/php-algorithms": "*",
+    "apache/log4php": "2.3.0"
   }
 }

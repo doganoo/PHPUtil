@@ -28,22 +28,24 @@ namespace doganoo\PHPUtil\Log;
 /**
  * Class
  *
- * TODO enable custom log format
- * TODO elaborate for abstract static classes/abstract classes with static variables/methods
- *
  * @package doganoo\PHPUtil\Log
  */
 class Logger {
+
     /** @var int DEBUG log level 0 */
-    public const DEBUG = 0;
+    public const DEBUG = 10000;
     /** @var int INFO log level 1 */
-    public const INFO = 1;
+    public const INFO = 20000;
     /** @var int WARN log level 2 */
-    public const WARN = 2;
+    public const WARN = 30000;
     /** @var int ERROR log level 3 */
-    public const ERROR = 3;
+    public const ERROR = 40000;
     /** @var int FATAL log level 4 */
-    public const FATAL = 4;
+    public const FATAL = 50000;
+    /** @var int TRACE log level 5 */
+    public const TRACE = 5000;
+    /** @var int OFF */
+    const OFF = 2147483647;
     /** @var int SIMPLE */
     public const SIMPLE = 0;
     /** @var int NORMAL */
@@ -51,11 +53,9 @@ class Logger {
     /** @var int DESCRIPTIVE */
     public const DESCRIPTIVE = 2;
     /** @var int $level */
-    private static $level = 0;
+    private static $level = self::ERROR;
     /** @var string $EOL */
     private static $EOL = "\n";
-    /** @var bool $logEnabled */
-    private static $logEnabled = true;
     /** @var int $mode */
     private static $mode = Logger::SIMPLE;
 
@@ -69,6 +69,7 @@ class Logger {
      * sets the end of line after a message is logged
      *
      * @param string $eol
+     * @deprecated
      */
     public static function setEOL(string $eol) {
         self::$EOL = $eol;
@@ -82,34 +83,26 @@ class Logger {
      * @param bool $logEnabled
      */
     public static function setLogEnabled(bool $logEnabled): void {
-        self::$logEnabled = $logEnabled;
+        if ($logEnabled) {
+            self::setLogLevel(self::$level);
+        } else {
+            self::setLogLevel(Logger::OFF);
+        }
     }
 
     /**
-     * setting the log level. The level can be one of:
-     *
-     * <ul>0 = DEBUG</ul>
-     * <ul>1 = INFO</ul>
-     * <ul>2 = WARN</ul>
-     * <ul>3 = ERROR</ul>
-     * <ul>4 = FATAL</ul>
-     *
-     * if $level does not match to any of these levels, the
-     * log level will be initialized to ERROR (3).
+     * setting the log level.
      *
      * @param int $level
      */
     public static function setLogLevel(int $level): void {
-        if ($level >= Logger::DEBUG && $level <= Logger::FATAL) {
-            self::$level = $level;
-        } else {
-            self::$level = Logger::ERROR;
-        }
+        self::$level = $level;
     }
 
     /**
      * @param int $mode
      * @return bool
+     * @deprecated
      */
     public static function setMode(int $mode): bool {
         if ($mode === Logger::SIMPLE
@@ -135,51 +128,50 @@ class Logger {
      * logs a message to the console
      *
      * @param string $message
-     * @param int    $level
+     * @param int $level
      */
     private static function log(string $message, int $level) {
-        $backTrace = \debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
-        $logLevelDescription = Logger::getLogLevelDescription($level);
+        $logger = \Logger::getRootLogger();
+        \Logger::configure(array(
+            'appenders' => array(
+                'default' => array(
+                    'class' => 'LoggerAppenderEcho',
+                    'layout' => array(
+                        'class' => 'LoggerLayoutPattern',
+                        'params' => array(
+                            'conversionPattern' => '%date{Y-m-d H:i:s} %logger %-5level %msg%n'
+                        )
+                    )
+                )
+            ),
+            'rootLogger' => array(
+                'appenders' => array('default')
+            ),
+        ));
 
-        $description = "";
-        $backTrace = \debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
-        if (Logger::$mode === Logger::NORMAL) $description = $backTrace[0]["file"] . " : ";
-        if (Logger::$mode === Logger::DESCRIPTIVE) $description = \json_encode($backTrace) . " : ";;
-
-        if ($level >= self::$level && self::$logEnabled) {
-            echo (new \DateTime())->format("Y-m-d H:i:s");
-            echo " : ";
-            echo $logLevelDescription;
-            echo " : ";
-            echo $description;
-            echo $message;
-            echo self::$EOL;
+        switch ($level) {
+            case Logger::DEBUG:
+                $logger->debug($message);
+                break;
+            case Logger::INFO:
+                $logger->info($message);
+                break;
+            case Logger::WARN:
+                $logger->warn($message);
+                break;
+            case Logger::ERROR:
+                $logger->error($message);
+                break;
+            case Logger::FATAL:
+                $logger->fatal($message);
+                break;
+            case Logger::TRACE:
+                $logger->trace($message);
+                break;
+            default:
         }
     }
 
-    /**
-     * returns a string that describes the current log level
-     *
-     * @param int $level
-     * @return string
-     */
-    private static function getLogLevelDescription(int $level): string {
-        if ($level === Logger::DEBUG) {
-            return "debug";
-        }
-        if ($level === Logger::INFO) {
-            return "info";
-        }
-        if ($level === Logger::WARN) {
-            return "warn";
-        }
-        if ($level === Logger::ERROR) {
-            return "error";
-        }
-        if ($level === Logger::FATAL) {
-            return "fatal";
-        }
-    }
 
     /**
      * logs a message with log level INFO
@@ -215,5 +207,14 @@ class Logger {
      */
     public static function fatal($message) {
         self::log($message, Logger::FATAL);
+    }
+
+    /**
+     * logs a message with log level TRACE
+     *
+     * @param $message
+     */
+    public static function trace($message) {
+        self::log($message, Logger::TRACE);
     }
 }
