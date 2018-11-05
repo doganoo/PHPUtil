@@ -25,8 +25,6 @@
 
 namespace doganoo\PHPUtil\Log;
 
-use doganoo\PHPUtil\FileSystem\FileHandler;
-
 /**
  * Class FileLogger
  *
@@ -34,33 +32,8 @@ use doganoo\PHPUtil\FileSystem\FileHandler;
  *
  * @package doganoo\PHPUtil\Log
  */
-class FileLogger {
-    /** @var int DEBUG log level 0 */
-    public const DEBUG = 0;
-    /** @var int INFO log level 1 */
-    public const INFO = 1;
-    /** @var int WARN log level 2 */
-    public const WARN = 2;
-    /** @var int ERROR log level 3 */
-    public const ERROR = 3;
-    /** @var int FATAL log level 4 */
-    public const FATAL = 4;
-    /** @var int SIMPLE */
-    public const SIMPLE = 0;
-    /** @var int NORMAL */
-    public const NORMAL = 1;
-    /** @var int DESCRIPTIVE */
-    public const DESCRIPTIVE = 2;
-    /** @var int $level */
-    private static $level = 0;
-    /** @var string $path */
-    private static $path = __DIR__ . "/logfile.log";
-    /** @var string $EOL */
-    private static $EOL = "\n";
-    /** @var bool $logEnabled */
-    private static $logEnabled = true;
-    /** @var int $mode */
-    private static $mode = FileLogger::SIMPLE;
+class FileLogger extends Logger {
+    private static $path = null;
 
     /**
      * Logger constructor prevents class instantiation
@@ -69,122 +42,36 @@ class FileLogger {
     }
 
     /**
-     * sets the end of line after a message is logged
-     *
-     * @param string $eol
-     */
-    public static function setEOL(string $eol) {
-        self::$EOL = $eol;
-    }
-
-    /**
-     * defines whether logging is enabled or not.
-     *
-     * @param bool $logEnabled
-     */
-    public static function setLogEnabled(bool $logEnabled): void {
-        self::$logEnabled = $logEnabled;
-    }
-
-    /**
-     * @param int $mode
-     * @return bool
-     */
-    public static function setMode(int $mode): bool {
-        if ($mode === FileLogger::SIMPLE
-            || $mode === FileLogger::NORMAL
-            || $mode === FileLogger::DESCRIPTIVE
-        ) {
-            FileLogger::$mode = $mode;
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * setting the log level. The level can be one of:
-     *
-     * <ul>0 = DEBUG</ul>
-     * <ul>1 = INFO</ul>
-     * <ul>2 = WARN</ul>
-     * <ul>3 = ERROR</ul>
-     * <ul>4 = FATAL</ul>
-     *
-     * if $level does not match to any of these levels, the
-     * log level will be initialized to ERROR (3).
-     *
-     * @param int $level
-     */
-    public static function setLogLevel(int $level): void {
-        if ($level >= FileLogger::DEBUG && $level <= FileLogger::FATAL) {
-            self::$level = $level;
-        } else {
-            self::$level = FileLogger::ERROR;
-        }
-
-    }
-
-    /**
-     * logs a message with log level DEBUG
+     * logs a message with log level INFO
      *
      * @param $message
      */
-    public static function debug($message) {
-        self::log($message, FileLogger::DEBUG);
+    public static function info($message) {
+        parent::setConfig(FileLogger::getConfiguration());
+        parent::info($message);
     }
 
-    /**
-     * logs a message to the console
-     *
-     * @param string $message
-     * @param int    $level
-     */
-    private static function log(string $message, int $level) {
-        $description = "";
-        $backTrace = \debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
-        if (FileLogger::$mode === FileLogger::NORMAL) $description = $backTrace[0]["file"] . " : ";
-        if (FileLogger::$mode === FileLogger::DESCRIPTIVE) $description = \json_encode($backTrace) . " : ";;
-
-        $logLevelDescription = FileLogger::getLogLevelDescription($level);
-        $fileHandler = new FileHandler(FileLogger::getPath());
-        $fileHandler->forceCreate();
-        $output = "";
-        if ($level >= self::$level
-            && self::$logEnabled
-            && $fileHandler->isFile()) {
-            $output .= (new \DateTime())->format("Y-m-d H:i:s");
-            $output .= " : ";
-            $output .= $logLevelDescription;
-            $output .= " : ";
-            $output .= $description;
-            $output .= $message;
-            $output .= self::$EOL;
-            \file_put_contents(self::$path, $output, \FILE_APPEND);
-        }
-    }
-
-    /**
-     * returns a string that describes the current log level
-     *
-     * @param int $level
-     * @return string
-     */
-    private static function getLogLevelDescription(int $level): string {
-        if ($level === Logger::DEBUG) {
-            return "debug";
-        }
-        if ($level === Logger::INFO) {
-            return "info";
-        }
-        if ($level === Logger::WARN) {
-            return "warn";
-        }
-        if ($level === Logger::ERROR) {
-            return "error";
-        }
-        if ($level === Logger::FATAL) {
-            return "fatal";
-        }
+    private static function getConfiguration(): array {
+        return array(
+            'appenders' => array(
+                'default' => array(
+                    'class' => 'LoggerAppenderFile',
+                    'layout' => array(
+                        'class' => 'LoggerLayoutPattern',
+                        'params' => array(
+                            'conversionPattern' => '%date{Y-m-d H:i:s} %logger %-5level %msg%n'
+                        )
+                    ),
+                    'params' => array(
+                        'file' => FileLogger::getPath(),
+                        'append' => true,
+                    ),
+                ),
+            ),
+            'rootLogger' => array(
+                'appenders' => array('default'),
+            ),
+        );
     }
 
     /**
@@ -206,21 +93,13 @@ class FileLogger {
     }
 
     /**
-     * logs a message with log level INFO
-     *
-     * @param $message
-     */
-    public static function info($message) {
-        self::log($message, FileLogger::INFO);
-    }
-
-    /**
      * logs a message with log level WARN
      *
      * @param $message
      */
     public static function warn($message) {
-        self::log($message, FileLogger::WARN);
+        parent::setConfig(FileLogger::getConfiguration());
+        parent::warn($message);
     }
 
     /**
@@ -229,7 +108,8 @@ class FileLogger {
      * @param $message
      */
     public static function error($message) {
-        self::log($message, FileLogger::ERROR);
+        parent::setConfig(FileLogger::getConfiguration());
+        parent::error($message);
     }
 
     /**
@@ -238,7 +118,29 @@ class FileLogger {
      * @param $message
      */
     public static function fatal($message) {
-        self::log($message, FileLogger::FATAL);
+        parent::setConfig(FileLogger::getConfiguration());
+        parent::fatal($message);
     }
+
+    /**
+     * logs a message with log level TRACE
+     *
+     * @param $message
+     */
+    public static function trace($message) {
+        parent::setConfig(FileLogger::getConfiguration());
+        parent::trace($message);
+    }
+
+    /**
+     * logs a message with log level DEBUG
+     *
+     * @param $message
+     */
+    public static function debug($message) {
+        parent::setConfig(FileLogger::getConfiguration());
+        parent::debug($message);
+    }
+
 
 }

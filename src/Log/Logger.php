@@ -52,12 +52,15 @@ class Logger {
     public const NORMAL = 1;
     /** @var int DESCRIPTIVE */
     public const DESCRIPTIVE = 2;
+    public const ECHO = 0;
     /** @var int $level */
     private static $level = self::ERROR;
     /** @var string $EOL */
     private static $EOL = "\n";
     /** @var int $mode */
     private static $mode = Logger::SIMPLE;
+    private static $config = null;
+
 
     /**
      * Logger constructor prevents class instantiation
@@ -132,22 +135,7 @@ class Logger {
      */
     private static function log(string $message, int $level) {
         $logger = \Logger::getRootLogger();
-        \Logger::configure(array(
-            'appenders' => array(
-                'default' => array(
-                    'class' => 'LoggerAppenderEcho',
-                    'layout' => array(
-                        'class' => 'LoggerLayoutPattern',
-                        'params' => array(
-                            'conversionPattern' => '%date{Y-m-d H:i:s} %logger %-5level %msg%n'
-                        )
-                    )
-                )
-            ),
-            'rootLogger' => array(
-                'appenders' => array('default')
-            ),
-        ));
+        \Logger::configure(self::getConfiguration());
 
         switch ($level) {
             case Logger::DEBUG:
@@ -172,6 +160,28 @@ class Logger {
         }
     }
 
+    private static function getConfiguration(): array {
+        if (null === Logger::$config) return Logger::getDefaultConfiguration();
+        return Logger::$config;
+    }
+
+    private static function getDefaultConfiguration() {
+        return array(
+            'appenders' => array(
+                'default' => array(
+                    'class' => 'LoggerAppenderEcho',
+                    'layout' => array(
+                        'class' => 'LoggerLayoutPattern',
+                        'params' => array(
+                            'conversionPattern' => '%date{Y-m-d H:i:s} %logger %-5level %msg%n'
+                        )
+                    )
+                )
+            ),
+            'rootLogger' => array(
+                'appenders' => array('default')
+            ));
+    }
 
     /**
      * logs a message with log level INFO
@@ -217,4 +227,13 @@ class Logger {
     public static function trace($message) {
         self::log($message, Logger::TRACE);
     }
+
+    /**
+     * @param array $config
+     * @return array
+     */
+    public static function setConfig(array $config): array {
+        return Logger::$config = $config;
+    }
+
 }
