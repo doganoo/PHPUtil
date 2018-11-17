@@ -65,4 +65,26 @@ class DirHandler {
         }
         return $file;
     }
+
+    /**
+     * lists every item in a given dir
+     *
+     * see here: https://stackoverflow.com/a/49066335/1966490
+     *
+     * @param string $path
+     * @return array
+     */
+    function list(string $path): array {
+        $result = [];
+        $scan = glob($path . '/*');
+        foreach ($scan as $item) {
+            if (is_dir($item)) {
+                $result[basename($item)] = $this->list($item);
+            } else {
+                $result[] = basename($item);
+            }
+
+        }
+        return $result;
+    }
 }
