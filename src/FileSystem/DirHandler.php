@@ -31,6 +31,37 @@ namespace doganoo\PHPUtil\FileSystem;
  * @package doganoo\PHPUtil\FileSystem
  */
 class DirHandler {
+    private $path = null;
+
+    /**
+     * DirHandler constructor.
+     * @param string $path
+     */
+    public function __construct(string $path) {
+        $this->setPath($path);
+    }
+
+    /**
+     * @return string
+     */
+    public function getPath(): string {
+        return $this->path;
+    }
+
+    /**
+     * @param string $path
+     */
+    public function setPath(string $path) {
+        $this->path = $path;
+    }
+
+    /**
+     * @param string $fileName
+     * @return string
+     */
+    public function findFile(string $fileName) {
+        return $this->_findFile($this->path, $fileName);
+    }
 
     /**
      * finds a file in the given dir
@@ -39,7 +70,7 @@ class DirHandler {
      * @param $fileName
      * @return string
      */
-    public function findFile(string $dirName, string $fileName) {
+    private function _findFile(string $dirName, string $fileName) {
         $dirs = glob($dirName . '*');
         $file = "";
         foreach ($dirs as $d) {
@@ -57,13 +88,40 @@ class DirHandler {
                     return $dirName . "/" . $pathInfo["basename"];
                 }
             } else if (is_dir($d)) {
-                $tmp = $this->findFile($d . "/", $fileName);
+                $tmp = $this->_findFile($d . "/", $fileName);
                 if ($tmp != "") {
                     $file = $tmp;
                 }
             }
         }
         return $file;
+    }
+
+    /**
+     * whether the dir is readable
+     *
+     * @return bool
+     */
+    public function isReadable(): bool {
+        return \is_dir($this->path) && \is_readable($this->path);
+    }
+
+    /**
+     * whether the dir is writable
+     *
+     * @return bool
+     */
+    public function isWritable(): bool {
+        return \is_dir($this->path) && \is_writable($this->path);
+    }
+
+    /**
+     * lists every item in a given dir
+     *
+     * @return array
+     */
+    public function list(): array {
+        return $this->_list($this->path);
     }
 
     /**
@@ -74,16 +132,15 @@ class DirHandler {
      * @param string $path
      * @return array
      */
-    function list(string $path): array {
+    function _list(string $path): array {
         $result = [];
         $scan = glob($path . '/*');
         foreach ($scan as $item) {
             if (is_dir($item)) {
-                $result[basename($item)] = $this->list($item);
+                $result[basename($item)] = $this->_list($item);
             } else {
                 $result[] = basename($item);
             }
-
         }
         return $result;
     }
