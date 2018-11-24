@@ -101,4 +101,15 @@ class FileHandler {
         return null;
     }
 
+    /**
+     * sets the content
+     *
+     * @param string $content
+     * @return bool
+     */
+    public function setContent(string $content): bool {
+        if (!$this->isFile()) return false;
+        return false !== \file_put_contents($this->path, $content);
+    }
+
 }
