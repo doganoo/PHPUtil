@@ -132,7 +132,7 @@ class DirHandler {
      * @param string $path
      * @return array
      */
-    function _list(string $path): array {
+    private function _list(string $path): array {
         $result = [];
         $scan = glob($path . '/*');
         foreach ($scan as $item) {
@@ -143,5 +143,14 @@ class DirHandler {
             }
         }
         return $result;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function toRealPath(): ?string {
+        $realpath = \realpath($this->path);
+        if (false === $realpath) return null;
+        return $realpath;
     }
 }
