@@ -41,7 +41,7 @@ final class ArrayUtil {
     /**
      * converts an array to a string using $delimiter as the delimiter between the elements
      *
-     * @param array  $array
+     * @param array $array
      * @param string $delimiter
      * @return string
      */
@@ -55,5 +55,47 @@ final class ArrayUtil {
             }
         }
         return $string;
+    }
+
+    /**
+     * returns a boolean that indicates whether a sequence sums up to a value or not
+     *
+     * @param array $numbers
+     * @param int $target
+     * @return bool
+     */
+    public static function hasSum(array $numbers, int $target): bool {
+        $collection = ArrayUtil::sumCollection($numbers, $target);
+        if (null === $collection) return false;
+        if (0 === \count($collection)) return false;
+        return true;
+    }
+
+    /**
+     * returns an array that contains all numbers that sums up to $val
+     *
+     * @param array $numbers
+     * @param int $target
+     * @return array|null
+     */
+    public static function sumCollection(array $numbers, int $target): ?array {
+        $size = count($numbers);
+        if ($size < 3) return null;
+        $collection = [];
+
+        for ($i = 0; $i < $size; $i++) {
+            for ($j = $i + 1; $j < $size; $j++) {
+                for ($k = $j + 1; $k < $size; $k++) {
+                    $sum = $numbers[$i] + $numbers[$j] + $numbers[$k];
+
+                    if ($sum === $target) {
+                        $collection[] = [$i, $j, $k];
+                        $sum = 0;
+                    }
+                    if ($sum > $target) continue;
+                }
+            }
+        }
+        return $collection;
     }
 }
