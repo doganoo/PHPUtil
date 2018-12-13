@@ -25,51 +25,65 @@ namespace doganoo\PHPUtil\Util;
  *
  * @package doganoo\PHPUtil\Util
  */
-final class StringUtil{
-	/**
-	 * prevent from instantiation
-	 * StringUtil constructor.
-	 */
-	private function __construct(){
-	}
+final class StringUtil {
+    /**
+     * prevent from instantiation
+     * StringUtil constructor.
+     */
+    private function __construct() {
+    }
 
-	/**
-	 * returns an array of elements of the string
-	 *
-	 * @param null|string $string
-	 *
-	 * @return array
-	 */
-	public static function stringToArray(?string $string): array{
-		$result = [];
-		$strLen = \strlen($string);
-		if(null === $string) return $result;
-		if(1 === $strLen){
-			$result[] = $string;
-			return $result;
-		}
-		for($i = 0; $i < $strLen; $i ++){
-			$result[] = $string[$i];
-		}
-		return $result;
-	}
+    /**
+     * returns an array of elements of the string
+     *
+     * @param null|string $string
+     *
+     * @return array
+     */
+    public static function stringToArray(?string $string): array {
+        $result = [];
+        $strLen = \strlen($string);
+        if (null === $string) return $result;
+        if (1 === $strLen) {
+            $result[] = $string;
+            return $result;
+        }
+        for ($i = 0; $i < $strLen; $i++) {
+            $result[] = $string[$i];
+        }
+        return $result;
+    }
 
-	/**
-	 * @param string $string
-	 *
-	 * @return string
-	 */
-	public function toUTF8(string $string): string{
-		$string = iconv('ASCII', 'UTF-8//IGNORE', $string);
-		return $string;
-	}
+    /**
+     * returns an UUID.
+     * See here: http://www.seanbehan.com/how-to-generate-a-uuid-in-php/
+     *
+     * @return string
+     * @throws \Exception
+     */
+    public static function getUUID(): string {
+        $data = random_bytes(16);
+        $data[6] = chr(ord($data[6]) & 0x0f | 0x40);
+        $data[8] = chr(ord($data[8]) & 0x3f | 0x80);
+        return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
+    }
 
-	/**
-	 * @param string $string
-	 *
-	 * @return string
-	 */
-	public function getEncoding(string $string): string{
-		return \mb_detect_encoding($string, "auto", true);
-	}
+    /**
+     * @param string $string
+     *
+     * @return string
+     */
+    public static function toUTF8(string $string): string {
+        $string = iconv('ASCII', 'UTF-8//IGNORE', $string);
+        return $string;
+    }
+
+    /**
+     * @param string $string
+     *
+     * @return string
+     */
+    public static function getEncoding(string $string): string {
+        return \mb_detect_encoding($string, "auto", true);
+    }
 }
