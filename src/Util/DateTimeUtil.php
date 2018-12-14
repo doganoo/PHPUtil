@@ -52,7 +52,7 @@ final class DateTimeUtil {
      * @return \DateTime
      * @throws \Exception
      */
-    public function subtractHours(int $hours, \DateTime $dateTime = null): \DateTime {
+    public static function subtractHours(int $hours, \DateTime $dateTime = null): \DateTime {
         if (null === $dateTime) $dateTime = new \DateTime();
         $dateTime->modify("-$hours hours");
         return $dateTime;
