@@ -39,11 +39,22 @@ final class DateTimeUtil {
     }
 
     /**
-     * returns the actual unix timestamp
-     *
      * @return int
+     * @throws \Exception
      */
     public static function getUnixTimestamp(): int {
         return (new \DateTime())->getTimestamp();
+    }
+
+    /**
+     * @param int $hours
+     * @param \DateTime|null $dateTime
+     * @return \DateTime
+     * @throws \Exception
+     */
+    public function subtractHours(int $hours, \DateTime $dateTime = null): \DateTime {
+        if (null === $dateTime) $dateTime = new \DateTime();
+        $dateTime->modify("-$hours hours");
+        return $dateTime;
     }
 }
