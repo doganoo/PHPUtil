@@ -30,7 +30,9 @@ namespace doganoo\PHPUtil\HTTP;
  *
  * @package doganoo\PHPUtil\HTTP
  */
-class Session {
+class Session implements \JsonSerializable {
+    private $started = false;
+
     /**
      * Session constructor.
      */
@@ -39,7 +41,7 @@ class Session {
          * see: https://stackoverflow.com/a/17399989
          */
         if (session_id() == '' || !isset ($_SESSION)) {
-            session_start();
+            $this->started = session_start();
         }
     }
 
@@ -116,5 +118,23 @@ class Session {
      */
     public function regenerateSessionId() {
         session_regenerate_id(true);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isStarted(): bool {
+        return $this->started;
+    }
+
+    /**
+     * Specify data which should be serialized to JSON
+     * @link https://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @return mixed data which can be serialized by <b>json_encode</b>,
+     * which is a value of any type other than a resource.
+     * @since 5.4.0
+     */
+    public function jsonSerialize() {
+        return $_SESSION;
     }
 }
