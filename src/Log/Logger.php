@@ -185,17 +185,17 @@ class Logger {
     }
 
     private static function getLoggerLevel(): \LoggerLevel {
-        if (self::$level === self::DEBUG) {
+        if (self::$level <= self::DEBUG) {
             return \LoggerLevel::getLevelDebug();
-        } else if (self::$level === self::INFO) {
+        } else if (self::$level <= self::INFO) {
             return \LoggerLevel::getLevelInfo();
-        } else if (self::$level === self::WARN) {
+        } else if (self::$level <= self::WARN) {
             return \LoggerLevel::getLevelWarn();
-        } else if (self::$level === self::ERROR) {
+        } else if (self::$level <= self::ERROR) {
             return \LoggerLevel::getLevelError();
-        } else if (self::$level === self::FATAL) {
+        } else if (self::$level <= self::FATAL) {
             return \LoggerLevel::getLevelFatal();
-        } else if (self::$level === self::TRACE) {
+        } else if (self::$level <= self::TRACE) {
             return \LoggerLevel::getLevelTrace();
         } else if (self::$level === self::OFF) {
             return \LoggerLevel::getLevelOff();
