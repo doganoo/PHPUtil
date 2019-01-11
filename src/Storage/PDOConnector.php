@@ -41,6 +41,8 @@ class PDOConnector implements IStorageConnector {
     private $statement = null;
     /** @var bool $transactionExists */
     private $transactionExists = false;
+    /** @var string|null $schemaName */
+    private $schemaName = null;
 
     /**
      * sets the credentials used to connect against the database
@@ -49,6 +51,14 @@ class PDOConnector implements IStorageConnector {
      */
     public function setCredentials(array $credentials) {
         $this->credentials = $credentials;
+        $this->schemaName = $credentials["dbname"];
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getSchema(): ?string {
+        return $this->schemaName;
     }
 
     /**
