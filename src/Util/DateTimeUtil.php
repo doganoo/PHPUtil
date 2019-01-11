@@ -31,6 +31,9 @@ namespace doganoo\PHPUtil\Util;
  * @package doganoo\PHPUtil\Util
  */
 final class DateTimeUtil {
+    /** @var string $GERMAN_DATE_TIME_FORMAT */
+    public const GERMAN_DATE_TIME_FORMAT = "d.m.Y H:i:s";
+
     /**
      * prevent from instantiation
      * StringUtil constructor.
@@ -56,5 +59,19 @@ final class DateTimeUtil {
         if (null === $dateTime) $dateTime = new \DateTime();
         $dateTime->modify("-$hours hours");
         return $dateTime;
+    }
+
+    /**
+     * returns a string in dd.mm.YYY H:i:s that correspondents to $timestamp
+     *
+     * @param int $timestamp
+     * @return string
+     * @throws \Exception
+     */
+    public static function timestampToGermanDateFormat(int $timestamp): string {
+        $dateTime = new \DateTime();
+        $dateTime->setTimestamp($timestamp);
+        $format = $dateTime->format(DateTimeUtil::GERMAN_DATE_TIME_FORMAT);
+        return $format;
     }
 }
