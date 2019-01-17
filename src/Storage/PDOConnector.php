@@ -173,7 +173,7 @@ class PDOConnector implements IStorageConnector {
     }
 
     /**
-     * tests the connection
+     * test the connection
      *
      * @return bool
      */

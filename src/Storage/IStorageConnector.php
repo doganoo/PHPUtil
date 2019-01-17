@@ -47,7 +47,7 @@ interface IStorageConnector {
     public function connect(): bool;
 
     /**
-     * tests the connection
+     * test the connection
      *
      * @return bool
      */

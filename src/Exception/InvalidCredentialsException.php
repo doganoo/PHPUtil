@@ -25,7 +25,11 @@
 
 namespace doganoo\PHPUtil\Exception;
 
-
-class InvalidCredentialsException extends \Exception {
+/**
+ * Class InvalidCredentialsException
+ *
+ * @package doganoo\PHPUtil\Exception
+ */
+class InvalidCredentialsException extends PHPUtilException {
 
 }

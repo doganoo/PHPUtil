@@ -41,6 +41,11 @@ class SysProperties {
     private static $path = null;
 
     /**
+     * @var null|array $properties
+     */
+    private $properties = null;
+
+    /**
      * @param string $path
      */
     public static function setPropertiesPath(string $path) {
@@ -52,6 +57,7 @@ class SysProperties {
      * @return string
      * @throws FileNotFoundException
      * @throws NoPathException
+     * @throws InvalidPropertyStructureException
      */
     public function read(string $index): string {
         $index = \trim($index);
@@ -70,6 +76,9 @@ class SysProperties {
      * @throws InvalidPropertyStructureException
      */
     private function getProperties(): array {
+        if (null !== $this->properties) {
+            return $this->properties;
+        }
         if (self::$path === null) {
             throw new NoPathException();
         }
@@ -80,6 +89,7 @@ class SysProperties {
         if (false === $ini) {
             throw new InvalidPropertyStructureException();
         }
+        $this->properties = $ini;
         return $ini;
     }
 

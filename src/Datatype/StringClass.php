@@ -23,15 +23,14 @@
  * SOFTWARE.
  */
 
-namespace doganoo\PHPUtil\System;
+namespace doganoo\PHPUtil\Datatype;
 
 /**
  * Class PString - bases on Java String class
  *
  * @package doganoo\PHPUtil\System
- * @deprecated use doganoo\PHPUtil\Datatype\StringClass instead
  */
-class PHPString {
+class StringClass {
     /**
      * @var string
      */

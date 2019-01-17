@@ -57,9 +57,9 @@ class DirHandler {
 
     /**
      * @param string $fileName
-     * @return string
+     * @return null|FileHandler
      */
-    public function findFile(string $fileName) {
+    public function findFile(string $fileName): ?FileHandler {
         return $this->_findFile($this->path, $fileName);
     }
 
@@ -70,9 +70,9 @@ class DirHandler {
      * @param $fileName
      * @return string
      */
-    private function _findFile(string $dirName, string $fileName) {
+    private function _findFile(string $dirName, string $fileName): ?FileHandler {
         $dirs = glob($dirName . '*');
-        $file = "";
+        $file = null;
         foreach ($dirs as $d) {
             if (is_file($d)) {
                 $pathInfo = \pathinfo($d);
@@ -85,11 +85,11 @@ class DirHandler {
                 }
 
                 if ($condition) {
-                    return $dirName . "/" . $pathInfo["basename"];
+                    return new FileHandler($dirName . "/" . $pathInfo["basename"]);
                 }
             } else if (is_dir($d)) {
                 $tmp = $this->_findFile($d . "/", $fileName);
-                if ($tmp != "") {
+                if (null !== $tmp) {
                     $file = $tmp;
                 }
             }

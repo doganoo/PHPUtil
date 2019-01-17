@@ -25,7 +25,11 @@
 
 namespace doganoo\PHPUtil\Exception;
 
-
-class FileNotFoundException extends \Exception {
+/**
+ * Class FileNotFoundException
+ *
+ * @package doganoo\PHPUtil\Exception
+ */
+class FileNotFoundException extends PHPUtilException {
 
 }

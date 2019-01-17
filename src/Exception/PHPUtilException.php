@@ -26,10 +26,10 @@
 namespace doganoo\PHPUtil\Exception;
 
 /**
- * Class NoPathException
+ * Class PHPUtilException
  *
  * @package doganoo\PHPUtil\Exception
  */
-class NoPathException extends PHPUtilException {
+class PHPUtilException extends \Exception {
 
 }
