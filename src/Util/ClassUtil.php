@@ -25,6 +25,8 @@
 
 namespace doganoo\PHPUtil\Util;
 
+use doganoo\PHPAlgorithms\Datastructure\Lists\ArrayLists\ArrayList;
+
 /**
  * Class ClassUtil
  *
@@ -126,6 +128,26 @@ final class ClassUtil {
         } else {
             return $properties;
         }
+    }
+
+    /**
+     * @param $object
+     * @param bool $asObject
+     * @return ArrayList|null
+     * @throws \ReflectionException
+     */
+    public static function getAllParentClasses($object, bool $asObject = true): ?ArrayList {
+        if (!\is_object($object)) return null;
+        $reflectionClass = new \ReflectionClass($object);
+        $parentClasses = new ArrayList();
+
+        $parentClass = $reflectionClass->getParentClass();
+        while (false !== $parentClass) {
+            if ($asObject) $parentClasses->add($parentClass);
+            else $parentClasses->add($parentClass->getName());
+            $parentClass = $parentClass->getParentClass();
+        }
+        return $parentClasses;
     }
 
 }
