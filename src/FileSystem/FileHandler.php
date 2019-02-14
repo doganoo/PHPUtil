@@ -34,25 +34,45 @@ class FileHandler {
     /** @var string $path */
     private $path = null;
 
+    /** @var null|string $content */
+    private $content = null;
+
     /**
      * FileHandler constructor.
      *
      * @param $path
      */
-    public function __construct($path) {
+    public function __construct(string $path) {
+        $this->setPath($path);
+    }
+
+    /**
+     * @return string
+     */
+    public function getPath(): string {
+        return $this->path;
+    }
+
+    /**
+     * @param string $path
+     */
+    public function setPath(string $path): void {
         $this->path = $path;
+        $this->content = null;
     }
 
     /**
      * creates a file
      *
+     * @param bool $override whether the file should be overriden
      * @return bool
      */
-    public function create(): bool {
-        if ($this->isFile()) {
-            return \touch($this->path);
-        }
-        return false;
+    public function create(bool $override): bool {
+        if ($this->isFile() && !$override) return false;
+        $handle = @fopen($this->path, 'w');
+        if (false === $handle) return false;
+        fclose($handle);
+        return true;
     }
 
     /**
@@ -65,9 +85,28 @@ class FileHandler {
     }
 
     /**
+     * checks whether the file is readable or not
+     *
+     * @return bool
+     */
+    public function isReadable(): bool {
+        return \is_readable($this->path);
+    }
+
+    /**
+     * alias method of isFile()
+     *
+     * @return bool
+     */
+    public function exists(): bool {
+        return $this->isFile();
+    }
+
+    /**
      * forces a file creation
      *
      * @return bool
+     * @deprecated Use create() instead
      */
     public function forceCreate(): bool {
         if (!$this->isFile()) {
@@ -95,21 +134,30 @@ class FileHandler {
      * @return null|string
      */
     public function getContent(): ?string {
-        if ($this->isFile()) {
-            return \file_get_contents($this->path);
-        }
-        return null;
+        if (null !== $this->content) return $this->content;
+        if (!$this->isFile()) return null;
+        $content = \file_get_contents($this->path);
+        if (false === $content) return null;
+        return $content;
     }
 
     /**
      * sets the content
      *
      * @param string $content
+     * @return void
+     */
+    public function setContent(string $content): void {
+        $this->content = $content;
+    }
+
+    /**
      * @return bool
      */
-    public function setContent(string $content): bool {
+    public function save(): bool {
         if (!$this->isFile()) return false;
-        return false !== \file_put_contents($this->path, $content);
+        if (!$this->isWritable()) return false;
+        return false !== \file_put_contents($this->path, $this->content);
     }
 
 }

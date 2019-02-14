@@ -31,6 +31,7 @@ namespace doganoo\PHPUtil\FileSystem;
  * @package doganoo\PHPUtil\FileSystem
  */
 class DirHandler {
+    public const DEFAULT_PERMISSION_MODE = 0770;
     private $path = null;
 
     /**
@@ -39,20 +40,6 @@ class DirHandler {
      */
     public function __construct(string $path) {
         $this->setPath($path);
-    }
-
-    /**
-     * @return string
-     */
-    public function getPath(): string {
-        return $this->path;
-    }
-
-    /**
-     * @param string $path
-     */
-    public function setPath(string $path) {
-        $this->path = $path;
     }
 
     /**
@@ -104,6 +91,29 @@ class DirHandler {
      */
     public function isReadable(): bool {
         return \is_dir($this->path) && \is_readable($this->path);
+    }
+
+    /**
+     * @param int $mode
+     * @param bool $recursive
+     * @return bool
+     */
+    public function mkdir(int $mode = DirHandler::DEFAULT_PERMISSION_MODE, bool $recursive = true): bool {
+        return \mkdir($this->getPath(), $mode, $recursive);
+    }
+
+    /**
+     * @return string
+     */
+    public function getPath(): string {
+        return $this->path;
+    }
+
+    /**
+     * @param string $path
+     */
+    public function setPath(string $path) {
+        $this->path = $path;
     }
 
     /**
