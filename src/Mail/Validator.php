@@ -29,6 +29,7 @@ namespace doganoo\PHPUtil\Mail;
  * Class Validator
  *
  * @package doganoo\PHPUtil\Mail
+ * @deprecated use Service/Regex instead
  */
 class Validator {
     /**
