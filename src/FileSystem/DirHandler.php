@@ -163,4 +163,14 @@ class DirHandler {
         if (false === $realpath) return null;
         return $realpath;
     }
+
+    /**
+     * @return bool
+     */
+    public function exists(): bool {
+        $path = $this->toRealPath();
+
+        return null !== $path && true === \is_dir($path);
+    }
+
 }
