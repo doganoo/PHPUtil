@@ -173,4 +173,35 @@ class DirHandler {
         return null !== $path && true === \is_dir($path);
     }
 
+    /**
+     * @param string $name
+     * @param bool $override
+     * @return bool
+     */
+    public function createFile(string $name, bool $override = false): bool {
+        if (!$this->exists()) return false;
+        if (!$override && $this->hasFile($name)) return true;
+        $path = $this->toRealPath();
+        return \touch($path . "/" . $name, \time(), \time());
+    }
+
+    /**
+     * @param string $name
+     * @return bool
+     */
+    public function hasFile(string $name): bool {
+        return null !== $this->findFile($name);
+    }
+
+    /**
+     * @param string $name
+     * @return bool
+     */
+    public function deleteFile(string $name): bool {
+        if (false === $this->exists()) return false;
+        if (false === $this->hasFile($name)) return false;
+        $path = $this->toRealPath();
+        return \unlink($path . "/" . $name);
+    }
+
 }

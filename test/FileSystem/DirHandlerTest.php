@@ -10,4 +10,11 @@ class DirHandlerTest extends TestCase {
         $fileHandler = $dirHandler->findFile("DirHandlerTest.php");
         $this->assertTrue(null !== $fileHandler);
     }
+
+    public function testCreateFile(){
+        $dirHandler = new DirHandler(__DIR__);
+        $created = $dirHandler->createFile("test.txt");
+        $this->assertTrue(true === $created);
+
+    }
 }
