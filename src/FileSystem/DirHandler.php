@@ -123,7 +123,7 @@ class DirHandler {
         if (!$this->exists()) return false;
         if (!$override && $this->hasFile($name)) return true;
         $path = $this->toRealPath();
-        $filePath = $path . $name;
+        $filePath = $path . "/" . $name;
         $touched = \touch($filePath, \time(), \time());
         if (null === $content) return $touched;
         if (false === $touched) return false;
