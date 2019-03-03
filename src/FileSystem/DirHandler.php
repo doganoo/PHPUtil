@@ -43,48 +43,6 @@ class DirHandler {
     }
 
     /**
-     * @param string $fileName
-     * @return null|FileHandler
-     */
-    public function findFile(string $fileName): ?FileHandler {
-        return $this->_findFile($this->path, $fileName);
-    }
-
-    /**
-     * finds a file in the given dir
-     *
-     * @param $dirName
-     * @param $fileName
-     * @return string
-     */
-    private function _findFile(string $dirName, string $fileName): ?FileHandler {
-        $dirs = glob($dirName . '*');
-        $file = null;
-        foreach ($dirs as $d) {
-            if (is_file($d)) {
-                $pathInfo = \pathinfo($d);
-                $pathInfo2 = \pathinfo($fileName);
-
-                if (isset($pathInfo2["extension"])) {
-                    $condition = $pathInfo["basename"] === $pathInfo2["basename"];
-                } else {
-                    $condition = $pathInfo["filename"] === $pathInfo2["filename"];
-                }
-
-                if ($condition) {
-                    return new FileHandler($dirName . "/" . $pathInfo["basename"]);
-                }
-            } else if (is_dir($d)) {
-                $tmp = $this->_findFile($d . "/", $fileName);
-                if (null !== $tmp) {
-                    $file = $tmp;
-                }
-            }
-        }
-        return $file;
-    }
-
-    /**
      * whether the dir is readable
      *
      * @return bool
@@ -156,12 +114,30 @@ class DirHandler {
     }
 
     /**
-     * @return string|null
+     * @param string $name
+     * @param bool $override
+     * @param string $content
+     * @return bool
      */
-    public function toRealPath(): ?string {
-        $realpath = \realpath($this->path);
-        if (false === $realpath) return null;
-        return $realpath;
+    public function createFile(string $name, bool $override = false, string $content = null): bool {
+        if (!$this->exists()) return false;
+        if (!$override && $this->hasFile($name)) return true;
+        $path = $this->toRealPath();
+        $filePath = $path . $name;
+        $touched = \touch($filePath, \time(), \time());
+        if (null === $content) return $touched;
+        if (false === $touched) return false;
+        $handle = fopen($filePath, "w+");
+        if (false === $handle) {
+            $this->deleteFile($filePath);
+            return false;
+        }
+        $written = \fwrite($handle,$content);
+        if (false === $written){
+            $this->deleteFile($written);
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -174,15 +150,12 @@ class DirHandler {
     }
 
     /**
-     * @param string $name
-     * @param bool $override
-     * @return bool
+     * @return string|null
      */
-    public function createFile(string $name, bool $override = false): bool {
-        if (!$this->exists()) return false;
-        if (!$override && $this->hasFile($name)) return true;
-        $path = $this->toRealPath();
-        return \touch($path . "/" . $name, \time(), \time());
+    public function toRealPath(): ?string {
+        $realpath = \realpath($this->path);
+        if (false === $realpath) return null;
+        return $realpath;
     }
 
     /**
@@ -191,6 +164,48 @@ class DirHandler {
      */
     public function hasFile(string $name): bool {
         return null !== $this->findFile($name);
+    }
+
+    /**
+     * @param string $fileName
+     * @return null|FileHandler
+     */
+    public function findFile(string $fileName): ?FileHandler {
+        return $this->_findFile($this->path, $fileName);
+    }
+
+    /**
+     * finds a file in the given dir
+     *
+     * @param $dirName
+     * @param $fileName
+     * @return string
+     */
+    private function _findFile(string $dirName, string $fileName): ?FileHandler {
+        $dirs = glob($dirName . '*');
+        $file = null;
+        foreach ($dirs as $d) {
+            if (is_file($d)) {
+                $pathInfo = \pathinfo($d);
+                $pathInfo2 = \pathinfo($fileName);
+
+                if (isset($pathInfo2["extension"])) {
+                    $condition = $pathInfo["basename"] === $pathInfo2["basename"];
+                } else {
+                    $condition = $pathInfo["filename"] === $pathInfo2["filename"];
+                }
+
+                if ($condition) {
+                    return new FileHandler($dirName . "/" . $pathInfo["basename"]);
+                }
+            } else if (is_dir($d)) {
+                $tmp = $this->_findFile($d . "/", $fileName);
+                if (null !== $tmp) {
+                    $file = $tmp;
+                }
+            }
+        }
+        return $file;
     }
 
     /**
