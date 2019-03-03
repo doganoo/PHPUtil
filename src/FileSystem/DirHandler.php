@@ -216,7 +216,7 @@ class DirHandler {
         if (false === $this->exists()) return false;
         if (false === $this->hasFile($name)) return false;
         $path = $this->toRealPath();
-        return \unlink($path . $name);
+        return \unlink($path . "/" . $name);
     }
 
 }
