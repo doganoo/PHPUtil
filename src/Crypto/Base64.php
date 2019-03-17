@@ -96,7 +96,6 @@ class Base64 {
      * @return array|null
      */
     public function getMimeType():?array {
-        if (!Base64::isBase64($this->getData())) return null;
 
         $decoded = $this->decode();
         $handle = finfo_open();
