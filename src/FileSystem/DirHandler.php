@@ -48,7 +48,16 @@ class DirHandler {
      * @return bool
      */
     public function isReadable(): bool {
-        return \is_dir($this->path) && \is_readable($this->path);
+        return $this->isDir() && \is_readable($this->path);
+    }
+
+    /**
+     * whether the dir is present
+     *
+     * @return bool
+     */
+    public function isDir(): bool {
+        return is_dir($this->path);
     }
 
     /**
@@ -80,7 +89,7 @@ class DirHandler {
      * @return bool
      */
     public function isWritable(): bool {
-        return \is_dir($this->path) && \is_writable($this->path);
+        return $this->isDir() && \is_writable($this->path);
     }
 
     /**
