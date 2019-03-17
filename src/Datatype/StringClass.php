@@ -52,9 +52,10 @@ class StringClass {
      * @return bool
      */
     public function equals($value) {
-        if ($value instanceof PHPString) {
+        if ($value instanceof StringClass) {
             $value = $value->getValue();
         }
+        if (!is_string($value)) return false;
         return strcmp($this->value, $value) === 0;
     }
 
@@ -83,10 +84,11 @@ class StringClass {
      * @return bool
      */
     public function equalsIgnoreCase($value) {
-        if ($value instanceof PHPString) {
+        if ($value instanceof StringClass) {
             $value = $value->getValue();
         }
-        return strcasecmp($this->value, $value) === 0;
+        if (!is_string($value)) return false;
+            return strcasecmp($this->value, $value) === 0;
     }
 
     /**
