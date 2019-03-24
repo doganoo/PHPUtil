@@ -74,11 +74,13 @@ class AppContainer {
      * retrieving the container instance.
      *
      * @param string $name
+     * @param array $params
+     *
      * @return int|null
      * @throws \doganoo\PHPAlgorithms\common\Exception\InvalidKeyTypeException
      * @throws \doganoo\PHPAlgorithms\common\Exception\UnsupportedKeyTypeException
      */
-    public static function get(string $name) {
+    public static function get(string $name, ...$params) {
         $map = self::getInstance();
         if (!$map->containsKey($name)) {
             return null;
@@ -88,7 +90,7 @@ class AppContainer {
         if (null === $node) {
             return null;
         }
-        return $node->getValue()();
+        return $node->getValue()($params);
     }
 
     /**
