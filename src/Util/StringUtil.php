@@ -20,6 +20,8 @@
  */
 
 namespace doganoo\PHPUtil\Util;
+use doganoo\PHPUtil\Datatype\StringClass;
+
 /**
  * Class StringUtil
  *
@@ -85,5 +87,15 @@ final class StringUtil {
      */
     public static function getEncoding(string $string): string {
         return \mb_detect_encoding($string, "auto", true);
+    }
+
+    /**
+     * @param string $string
+     * @param string $prefix
+     * @return bool
+     */
+    public static function hasPrefix(string $string, string $prefix):bool {
+        $stringClass = new StringClass($string);
+        return $stringClass->hasPrefix($prefix);
     }
 }

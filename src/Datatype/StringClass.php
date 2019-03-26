@@ -181,4 +181,16 @@ class StringClass {
         $return = substr($this->value, 0, $count);
         return $return;
     }
+
+    /**
+     * checks a prefix
+     *
+     * have a look here: https://stackoverflow.com/a/2790919
+     *
+     * @param string $prefix
+     * @return bool
+     */
+    public function hasPrefix(string $prefix):bool {
+        return true === (substr( $this->getValue(), 0, strlen($prefix)) === $prefix);
+    }
 }
