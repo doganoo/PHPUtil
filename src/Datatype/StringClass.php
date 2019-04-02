@@ -74,7 +74,7 @@ class StringClass {
      * @param $value
      */
     public function setValue($value) {
-        $this->value = $value;
+        $this->value = (string) $value;
     }
 
     /**
