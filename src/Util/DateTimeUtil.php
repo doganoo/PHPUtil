@@ -74,4 +74,16 @@ final class DateTimeUtil {
         $format = $dateTime->format(DateTimeUtil::GERMAN_DATE_TIME_FORMAT);
         return $format;
     }
+
+    /**
+     * Whether string is a valid date or not
+     *
+     * @param string $date
+     * @param string $format
+     * @return bool
+     */
+    public static function valid(string $date, string $format): bool {
+        return date($format, strtotime($date)) === $date;
+
+    }
 }
