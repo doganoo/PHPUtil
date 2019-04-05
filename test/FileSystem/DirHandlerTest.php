@@ -15,6 +15,7 @@ class DirHandlerTest extends TestCase {
         $dirHandler = new DirHandler(__DIR__);
         $created = $dirHandler->createFile("test.txt");
         $this->assertTrue(true === $created);
+        $dirHandler->deleteFile("test.txt");
 
     }
 }

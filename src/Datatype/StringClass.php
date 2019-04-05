@@ -34,7 +34,7 @@ class StringClass {
     /**
      * @var string
      */
-    private $value = "";
+    private $value = null;
 
     /**
      * PString constructor.
@@ -64,7 +64,7 @@ class StringClass {
      *
      * @return string
      */
-    public function getValue() {
+    public function getValue():?string {
         return $this->value;
     }
 
@@ -182,6 +182,11 @@ class StringClass {
         return $return;
     }
 
+    public function getLength():int{
+        if (null === $this->getValue()) return 0;
+        return strlen($this->getValue());
+    }
+
     /**
      * checks a prefix
      *
@@ -191,6 +196,18 @@ class StringClass {
      * @return bool
      */
     public function hasPrefix(string $prefix):bool {
+        if (0 !== $this->getLength() && "" === $prefix) return false;
         return true === (substr( $this->getValue(), 0, strlen($prefix)) === $prefix);
+    }
+
+    /**
+     * checks a suffix
+     *
+     * @param string $suffix
+     * @return bool
+     */
+    public function hasSuffix(string $suffix):bool {
+        if (0 !== $this->getLength() && "" === $suffix) return false;
+        return (substr($this->getValue(), -1 * strlen($suffix), strlen($suffix)) === $suffix);
     }
 }
