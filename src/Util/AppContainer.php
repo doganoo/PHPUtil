@@ -25,8 +25,14 @@
 
 namespace doganoo\PHPUtil\Util;
 
+use doganoo\PHPAlgorithms\common\Exception\InvalidKeyTypeException;
+use doganoo\PHPAlgorithms\common\Exception\UnsupportedKeyTypeException;
 use doganoo\PHPAlgorithms\Datastructure\Lists\Node;
 use doganoo\PHPAlgorithms\Datastructure\Maps\HashMap;
+use doganoo\PHPUtil\Exception\ClassNotFoundException;
+use ReflectionClass;
+use ReflectionException;
+use ReflectionParameter;
 
 /**
  * Class AppContainer - container class for instances.
@@ -37,6 +43,8 @@ class AppContainer {
 
     /** @var HashMap $map */
     private static $map = null;
+
+    private static $autoLoad = false;
 
     /**
      * AppContainer constructor - private constructor in order
@@ -49,9 +57,9 @@ class AppContainer {
     /**
      * @param string   $name
      * @param callable $callable
-     * @throws \doganoo\PHPAlgorithms\common\Exception\InvalidKeyTypeException
-     * @throws \doganoo\PHPAlgorithms\common\Exception\UnsupportedKeyTypeException
-     * @throws \ReflectionException
+     * @throws InvalidKeyTypeException
+     * @throws UnsupportedKeyTypeException
+     * @throws ReflectionException
      */
     public static function add(string $name, callable $callable) {
         $map = self::getInstance();
@@ -76,11 +84,13 @@ class AppContainer {
      * @param string $name
      * @param array $params
      *
-     * @return int|null
-     * @throws \doganoo\PHPAlgorithms\common\Exception\InvalidKeyTypeException
-     * @throws \doganoo\PHPAlgorithms\common\Exception\UnsupportedKeyTypeException
+     * @return mixed|null
+     * @throws InvalidKeyTypeException
+     * @throws UnsupportedKeyTypeException
      */
     public static function get(string $name, ...$params) {
+        if (AppContainer::isAutoLoad()) return self::getAutoLoad($name, $params);
+
         $map = self::getInstance();
         if (!$map->containsKey($name)) {
             return null;
@@ -94,6 +104,33 @@ class AppContainer {
     }
 
     /**
+     * @param string $name
+     * @param mixed ...$params
+     * @return object|null
+     */
+    private static function getAutoLoad(string $name, ...$params){
+        try{
+            $reflectionClass = new ReflectionClass($name);
+            $constructor = $reflectionClass->getConstructor();
+            $parameters = [];
+
+            if (null !== $constructor){
+                /** @var ReflectionParameter $parameter */
+                foreach ($constructor->getParameters() as $parameter){
+                    $className = $parameter->getClass()->getName();
+                    $class = AppContainer::get($className);
+                    if (null === $class) throw new ClassNotFoundException();
+                    $parameters[] = $class;
+                }
+            }
+            $clazz = $reflectionClass->newInstanceArgs($parameters + $params);
+            return $clazz;
+        } catch (ClassNotFoundException $exception){
+            return null;
+        }
+    }
+
+    /**
      * returns all class names as an array
      *
      * @return array
@@ -101,5 +138,23 @@ class AppContainer {
     public static function getClasses(): array {
         $classNames = self::$map->keySet();
         return $classNames;
+    }
+
+    /**
+     * WARNING: THIS MODE IS EXPERIMENTAL !! USE IT ON YOUR OWN RISK !!
+     *
+     * @param bool $autoLoad
+     */
+    public static function setAutoLoad(bool $autoLoad):void {
+        self::$autoLoad = $autoLoad;
+    }
+
+    /**
+     * WARNING: THIS MODE IS EXPERIMENTAL !! USE IT ON YOUR OWN RISK !!
+     *
+     * @return bool
+     */
+    public static function isAutoLoad():bool {
+        return self::$autoLoad;
     }
 }
