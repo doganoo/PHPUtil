@@ -25,8 +25,10 @@
 
 namespace doganoo\PHPUtil\DI;
 
+use doganoo\PHPAlgorithms\Datastructure\Lists\Node;
+use doganoo\PHPAlgorithms\Datastructure\Maps\HashMap;
 use doganoo\PHPUtil\Exception\ClassNotFoundException;
-use doganoo\PHPUtil\Util\AppContainer;
+use Exception;
 use ReflectionClass;
 use ReflectionParameter;
 
@@ -47,6 +49,18 @@ use ReflectionParameter;
  */
 class Container {
 
+    private $instances = null;
+
+    private $created = null;
+
+    public function __construct() {
+        $this->instances = new HashMap();
+        $this->created = new HashMap();
+    }
+
+    public function add(string $name, callable $callable):void {
+        $this->instances->add($name, $callable);
+    }
     /**
      * retrieving the container instance.
      *
@@ -56,25 +70,47 @@ class Container {
      * @return mixed|null
      */
     public function get(string $name, ...$params) {
-        try{
+        if ($this->created->containsKey($name)) return $this->created->getNodeByKey($name)->getValue();
+        if ($this->instances->containsKey($name)) return $this->fromInstances($name, $params);
+
+        try {
             $reflectionClass = new ReflectionClass($name);
             $constructor = $reflectionClass->getConstructor();
             $parameters = [];
 
-            if (null !== $constructor){
+            if (null !== $constructor) {
                 /** @var ReflectionParameter $parameter */
-                foreach ($constructor->getParameters() as $parameter){
+                foreach ($constructor->getParameters() as $parameter) {
                     $className = $parameter->getClass()->getName();
-                    $class = AppContainer::get($className);
+                    $class = $this->get($className);
                     if (null === $class) throw new ClassNotFoundException();
                     $parameters[] = $class;
                 }
             }
             $clazz = $reflectionClass->newInstanceArgs($parameters + $params);
+            $this->created->add($name, $clazz);
             return $clazz;
-        } catch (ClassNotFoundException $exception){
+        } catch (Exception $exception) {
             return null;
         }
+    }
+
+    /**
+     * @param string $name
+     * @param mixed ...$params
+     * @return mixed|null
+     */
+    private function fromInstances(string $name, ...$params){
+        if (false === $this->instances->containsKey($name)) return null;
+
+        /** @var Node $node */
+        $node = $this->instances->getNodeByKey($name);
+        if (null === $node) {
+            return null;
+        }
+        $clazz = $node->getValue()($params);
+        $this->created->add($name, $clazz);
+        return $clazz;
     }
 
 }

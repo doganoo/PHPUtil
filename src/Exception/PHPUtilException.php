@@ -25,11 +25,13 @@
 
 namespace doganoo\PHPUtil\Exception;
 
+use Exception;
+
 /**
  * Class PHPUtilException
  *
  * @package doganoo\PHPUtil\Exception
  */
-class PHPUtilException extends \Exception {
+class PHPUtilException extends Exception {
     protected $message = 'no message specified ¯\_(ツ)_/¯';
 }
