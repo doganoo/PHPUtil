@@ -75,6 +75,7 @@ class Container {
 
         try {
             $reflectionClass = new ReflectionClass($name);
+            if (false === $reflectionClass->isInstantiable()) return null;
             $constructor = $reflectionClass->getConstructor();
             $parameters = [];
 

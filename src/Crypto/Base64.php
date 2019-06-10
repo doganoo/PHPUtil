@@ -36,18 +36,26 @@ class Base64 {
     /** @var null|array $mimeType */
     private $mimeType = null;
 
+    private $encoded = false;
+
     /**
      * Base64 constructor.
      * @param null $data
      */
     public function __construct($data = null) {
         $this->setData($data);
+
+        if (Base64::isBase64($data)) {
+            $this->encoded = true;
+        } else {
+            $this->encoded = false;
+        }
     }
 
     /**
      * @param $data
      */
-    public function setData($data): void {
+    private function setData($data): void {
         $this->data = $data;
     }
 
@@ -62,8 +70,10 @@ class Base64 {
      * @return string
      */
     public function encode(): string {
+        if ($this->encoded) return $this->getData();
         $data = base64_encode($this->getData());
         $this->setData($data);
+        $this->encoded = true;
         return $this->getData();
     }
 
@@ -72,8 +82,10 @@ class Base64 {
      * @return mixed|null
      */
     public function decode(bool $strict = true){
+        if (!$this->encoded) return $this->getData();
         $data = base64_decode($this->getData(), $strict);
         $this->setData($data);
+        $this->encoded = false;
         return $this->getData();
     }
 
@@ -82,6 +94,7 @@ class Base64 {
      * @return bool
      */
     public static function isBase64($data):bool {
+        return true;
         if (null === $data) return false;
         if (!is_string($data)) return false;
 
@@ -97,18 +110,16 @@ class Base64 {
      */
     public function getMimeType():?array {
 
-        $decoded = $this->decode();
-        $handle = finfo_open();
-
-        $mimeType = finfo_buffer(
-            $handle
-            , $decoded
-            , FILEINFO_MIME_TYPE
+        preg_match(
+            "/^data:image\/(.*);base64/i"
+            , $this->encode()
+            , $match
         );
 
-        $this->mimeType = [$mimeType];
+        $this->mimeType = [$match[1]];
 
         return $this->mimeType;
+
     }
 
 }
