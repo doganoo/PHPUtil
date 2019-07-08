@@ -43,7 +43,9 @@ class AppContainer {
 
     /** @var HashMap $map */
     private static $map = null;
-
+    /** @var HashMap $cache */
+    private static $cache = null;
+    /** @var bool $autoLoad */
     private static $autoLoad = false;
 
     /**
@@ -74,6 +76,7 @@ class AppContainer {
     private static function getInstance(): HashMap {
         if (null === self::$map) {
             self::$map = new HashMap();
+            self::$cache = new HashMap();
         }
         return self::$map;
     }
@@ -89,6 +92,15 @@ class AppContainer {
      * @throws UnsupportedKeyTypeException
      */
     public static function get(string $name, ...$params) {
+        // we check the cache: if there is an instance already created
+        // we use the created instance instead
+        // TODO: use force create: if user wants to force an new instance
+        //      we need to skip the cache
+        if (AppContainer::isCached($name)){
+            return self::$cache->getNodeByKey($name)->getValue();
+        }
+
+        // experimental feature: set autoload to true if you want to use autowiring
         if (AppContainer::isAutoLoad()) return self::getAutoLoad($name, $params);
 
         $map = self::getInstance();
@@ -100,7 +112,11 @@ class AppContainer {
         if (null === $node) {
             return null;
         }
-        return $node->getValue()($params);
+        // we create the instance and add it to the cache
+        $instance = $node->getValue()($params);
+        self::$cache->add($name, $instance);
+
+        return $instance;
     }
 
     /**
@@ -128,6 +144,10 @@ class AppContainer {
         } catch (ClassNotFoundException $exception){
             return null;
         }
+    }
+
+    private static function isCached(string $name):bool {
+        return true === self::$cache->containsKey($name);
     }
 
     /**

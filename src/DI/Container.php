@@ -51,16 +51,17 @@ class Container {
 
     private $instances = null;
 
-    private $created = null;
+    private $cache = null;
 
     public function __construct() {
         $this->instances = new HashMap();
-        $this->created = new HashMap();
+        $this->cache = new HashMap();
     }
 
     public function add(string $name, callable $callable):void {
         $this->instances->add($name, $callable);
     }
+
     /**
      * retrieving the container instance.
      *
@@ -68,9 +69,10 @@ class Container {
      * @param array $params
      *
      * @return mixed|null
+     * @throws Exception
      */
     public function get(string $name, ...$params) {
-        if ($this->created->containsKey($name)) return $this->created->getNodeByKey($name)->getValue();
+        if ($this->cache->containsKey($name)) return $this->cache->getNodeByKey($name)->getValue();
         if ($this->instances->containsKey($name)) return $this->fromInstances($name, $params);
 
         try {
@@ -82,6 +84,7 @@ class Container {
             if (null !== $constructor) {
                 /** @var ReflectionParameter $parameter */
                 foreach ($constructor->getParameters() as $parameter) {
+                    // TODO is instantiable ?!
                     $className = $parameter->getClass()->getName();
                     $class = $this->get($className);
                     if (null === $class) throw new ClassNotFoundException();
@@ -89,11 +92,13 @@ class Container {
                 }
             }
             $clazz = $reflectionClass->newInstanceArgs($parameters + $params);
-            $this->created->add($name, $clazz);
+            $this->cache->add($name, $clazz);
             return $clazz;
         } catch (Exception $exception) {
-            return null;
+            throw $exception;
         }
+
+        return null;
     }
 
     /**
@@ -110,7 +115,7 @@ class Container {
             return null;
         }
         $clazz = $node->getValue()($params);
-        $this->created->add($name, $clazz);
+        $this->cache->add($name, $clazz);
         return $clazz;
     }
 
