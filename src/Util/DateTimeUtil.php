@@ -25,6 +25,9 @@
 
 namespace doganoo\PHPUtil\Util;
 
+use DateTime;
+use Exception;
+
 /**
  * Class DateTimeUtil
  *
@@ -33,6 +36,9 @@ namespace doganoo\PHPUtil\Util;
 final class DateTimeUtil {
     /** @var string $GERMAN_DATE_TIME_FORMAT */
     public const GERMAN_DATE_TIME_FORMAT = "d.m.Y H:i:s";
+
+    /** @var string $MYSQL_DATE_TIME_FORMAT */
+    public const MYSQL_DATE_TIME_FORMAT = "Y-m-d H:i:s";
 
     /**
      * prevent from instantiation
@@ -43,20 +49,20 @@ final class DateTimeUtil {
 
     /**
      * @return int
-     * @throws \Exception
+     * @throws Exception
      */
     public static function getUnixTimestamp(): int {
-        return (new \DateTime())->getTimestamp();
+        return (new DateTime())->getTimestamp();
     }
 
     /**
      * @param int $hours
-     * @param \DateTime|null $dateTime
-     * @return \DateTime
-     * @throws \Exception
+     * @param DateTime|null $dateTime
+     * @return DateTime
+     * @throws Exception
      */
-    public static function subtractHours(int $hours, \DateTime $dateTime = null): \DateTime {
-        if (null === $dateTime) $dateTime = new \DateTime();
+    public static function subtractHours(int $hours, DateTime $dateTime = null): DateTime {
+        if (null === $dateTime) $dateTime = new DateTime();
         $dateTime->modify("-$hours hours");
         return $dateTime;
     }
@@ -66,10 +72,10 @@ final class DateTimeUtil {
      *
      * @param int $timestamp
      * @return string
-     * @throws \Exception
+     * @throws Exception
      */
     public static function timestampToGermanDateFormat(int $timestamp): string {
-        $dateTime = new \DateTime();
+        $dateTime = new DateTime();
         $dateTime->setTimestamp($timestamp);
         $format = $dateTime->format(DateTimeUtil::GERMAN_DATE_TIME_FORMAT);
         return $format;
@@ -84,6 +90,13 @@ final class DateTimeUtil {
      */
     public static function valid(string $date, string $format): bool {
         return date($format, strtotime($date)) === $date;
+    }
 
+    /**
+     * @param string $date
+     * @return DateTime
+     */
+    public static function fromMysqlDateTime(string $date): DateTime{
+        return DateTime::createFromFormat(DateTimeUtil::MYSQL_DATE_TIME_FORMAT, $date);
     }
 }
