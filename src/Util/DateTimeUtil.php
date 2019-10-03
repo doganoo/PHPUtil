@@ -99,4 +99,13 @@ final class DateTimeUtil {
     public static function fromMysqlDateTime(string $date): DateTime{
         return DateTime::createFromFormat(DateTimeUtil::MYSQL_DATE_TIME_FORMAT, $date);
     }
+
+    /**
+     * @param DateTime|null $dateTime
+     * @return string|null
+     */
+    public static function formatMysqlDateTime(?DateTime $dateTime):?string {
+        if (null === $dateTime) return null;
+        return $dateTime->format(DateTimeUtil::MYSQL_DATE_TIME_FORMAT);
+    }
 }
