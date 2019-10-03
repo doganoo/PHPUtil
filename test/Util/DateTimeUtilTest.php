@@ -38,6 +38,7 @@ class DateTimeUtilTest extends TestCase {
     }
 
     public function testFromMysqlDateTime(){
+        $this->assertNull($dateTime = DateTimeUtil::fromMysqlDateTime(null));
         $dateTimeString = "2019-09-20 19:21:47";
         $dateTime = DateTimeUtil::fromMysqlDateTime($dateTimeString);
         $this->assertTrue($dateTime->format(DateTimeUtil::MYSQL_DATE_TIME_FORMAT) === $dateTimeString);

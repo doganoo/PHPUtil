@@ -34,6 +34,7 @@ use Exception;
  * @package doganoo\PHPUtil\Util
  */
 final class DateTimeUtil {
+
     /** @var string $GERMAN_DATE_TIME_FORMAT */
     public const GERMAN_DATE_TIME_FORMAT = "d.m.Y H:i:s";
 
@@ -56,7 +57,7 @@ final class DateTimeUtil {
     }
 
     /**
-     * @param int $hours
+     * @param int           $hours
      * @param DateTime|null $dateTime
      * @return DateTime
      * @throws Exception
@@ -93,10 +94,11 @@ final class DateTimeUtil {
     }
 
     /**
-     * @param string $date
-     * @return DateTime
+     * @param string $date|null
+     * @return DateTime|null
      */
-    public static function fromMysqlDateTime(string $date): DateTime{
+    public static function fromMysqlDateTime(?string $date): ?DateTime {
+        if (null === $date) return null;
         return DateTime::createFromFormat(DateTimeUtil::MYSQL_DATE_TIME_FORMAT, $date);
     }
 
@@ -104,8 +106,9 @@ final class DateTimeUtil {
      * @param DateTime|null $dateTime
      * @return string|null
      */
-    public static function formatMysqlDateTime(?DateTime $dateTime):?string {
+    public static function formatMysqlDateTime(?DateTime $dateTime): ?string {
         if (null === $dateTime) return null;
         return $dateTime->format(DateTimeUtil::MYSQL_DATE_TIME_FORMAT);
     }
+
 }
