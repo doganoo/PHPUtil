@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * MIT License
  *
@@ -25,12 +26,26 @@
 
 namespace doganoo\PHPUtil\FileSystem;
 
+use RecursiveDirectoryIterator;
+use SplFileInfo;
+use function fwrite;
+use function is_dir;
+use function is_readable;
+use function is_writable;
+use function mkdir;
+use function pathinfo;
+use function realpath;
+use function time;
+use function touch;
+use function unlink;
+
 /**
  * Class DirHandler
  *
  * @package doganoo\PHPUtil\FileSystem
  */
 class DirHandler {
+
     public const DEFAULT_PERMISSION_MODE = 0770;
     private $path = null;
 
@@ -48,7 +63,7 @@ class DirHandler {
      * @return bool
      */
     public function isReadable(): bool {
-        return $this->isDir() && \is_readable($this->path);
+        return $this->isDir() && is_readable($this->path);
     }
 
     /**
@@ -61,12 +76,12 @@ class DirHandler {
     }
 
     /**
-     * @param int $mode
+     * @param int  $mode
      * @param bool $recursive
      * @return bool
      */
     public function mkdir(int $mode = DirHandler::DEFAULT_PERMISSION_MODE, bool $recursive = true): bool {
-        return \mkdir($this->getPath(), $mode, $recursive);
+        return mkdir($this->getPath(), $mode, $recursive);
     }
 
     /**
@@ -89,7 +104,7 @@ class DirHandler {
      * @return bool
      */
     public function isWritable(): bool {
-        return $this->isDir() && \is_writable($this->path);
+        return $this->isDir() && is_writable($this->path);
     }
 
     /**
@@ -111,7 +126,7 @@ class DirHandler {
      */
     private function _list(string $path): array {
         $result = [];
-        $scan = glob($path . '/*');
+        $scan   = glob($path . '/*');
         foreach ($scan as $item) {
             if (is_dir($item)) {
                 $result[basename($item)] = $this->_list($item);
@@ -124,16 +139,16 @@ class DirHandler {
 
     /**
      * @param string $name
-     * @param bool $override
+     * @param bool   $override
      * @param string $content
      * @return bool
      */
     public function createFile(string $name, bool $override = false, string $content = null): bool {
         if (!$this->exists()) return false;
         if (!$override && $this->hasFile($name)) return true;
-        $path = $this->toRealPath();
+        $path     = $this->toRealPath();
         $filePath = $path . "/" . $name;
-        $touched = \touch($filePath, \time(), \time());
+        $touched  = touch($filePath, time(), time());
         if (null === $content) return $touched;
         if (false === $touched) return false;
         $handle = fopen($filePath, "w+");
@@ -141,8 +156,8 @@ class DirHandler {
             $this->deleteFile($filePath);
             return false;
         }
-        $written = \fwrite($handle,$content);
-        if (false === $written){
+        $written = fwrite($handle, $content);
+        if (false === $written) {
             $this->deleteFile($written);
             return false;
         }
@@ -155,14 +170,14 @@ class DirHandler {
     public function exists(): bool {
         $path = $this->toRealPath();
 
-        return null !== $path && true === \is_dir($path);
+        return null !== $path && true === is_dir($path);
     }
 
     /**
      * @return string|null
      */
     public function toRealPath(): ?string {
-        $realpath = \realpath($this->path);
+        $realpath = realpath($this->path);
         if (false === $realpath) return null;
         return $realpath;
     }
@@ -188,15 +203,15 @@ class DirHandler {
      *
      * @param $dirName
      * @param $fileName
-     * @return string
+     * @return FileHandler
      */
     private function _findFile(string $dirName, string $fileName): ?FileHandler {
         $dirs = glob($dirName . '*');
         $file = null;
         foreach ($dirs as $d) {
             if (is_file($d)) {
-                $pathInfo = \pathinfo($d);
-                $pathInfo2 = \pathinfo($fileName);
+                $pathInfo  = pathinfo($d);
+                $pathInfo2 = pathinfo($fileName);
 
                 if (isset($pathInfo2["extension"])) {
                     $condition = $pathInfo["basename"] === $pathInfo2["basename"];
@@ -207,10 +222,12 @@ class DirHandler {
                 if ($condition) {
                     return new FileHandler($dirName . "/" . $pathInfo["basename"]);
                 }
-            } else if (is_dir($d)) {
-                $tmp = $this->_findFile($d . "/", $fileName);
-                if (null !== $tmp) {
-                    $file = $tmp;
+            } else {
+                if (is_dir($d)) {
+                    $tmp = $this->_findFile($d . "/", $fileName);
+                    if (null !== $tmp) {
+                        $file = $tmp;
+                    }
                 }
             }
         }
@@ -225,7 +242,30 @@ class DirHandler {
         if (false === $this->exists()) return false;
         if (false === $this->hasFile($name)) return false;
         $path = $this->toRealPath();
-        return \unlink($path . "/" . $name);
+        return unlink($path . "/" . $name);
+    }
+
+    /**
+     * removes a directory in the base directory
+     *
+     * @param string|null $name
+     * @return bool
+     */
+    public function rmdir(string $name = null): bool {
+        $iterator = new RecursiveDirectoryIterator(
+            $this->getPath()
+        );
+
+        /** @var SplFileInfo $item */
+        foreach ($iterator as $item) {
+            if (false === $item->isDir()) continue;
+            if ($item->getBasename() === $name) {
+                unlink($item->getRealPath());
+                return true;
+            }
+        }
+
+        return false;
     }
 
 }
