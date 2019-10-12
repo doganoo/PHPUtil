@@ -251,21 +251,21 @@ class DirHandler {
      * @param string|null $name
      * @return bool
      */
-    public function rmdir(string $name = null): bool {
-        $iterator = new RecursiveDirectoryIterator(
+    public function rmdir(): bool {
+        $itemsDeleted = false;
+        $iterator     = new RecursiveDirectoryIterator(
             $this->getPath()
         );
 
         /** @var SplFileInfo $item */
         foreach ($iterator as $item) {
-            if (false === $item->isDir()) continue;
-            if ($item->getBasename() === $name) {
-                unlink($item->getRealPath());
-                return true;
-            }
+            $itemDeleted  = unlink($item->getRealPath());
+            $itemsDeleted = $itemsDeleted && $itemDeleted;
         }
 
-        return false;
+        $pathDeleted = unlink($this->getPath());
+
+        return true === $itemsDeleted && true === $pathDeleted;
     }
 
 }
