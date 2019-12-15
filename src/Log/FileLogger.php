@@ -33,6 +33,7 @@ namespace doganoo\PHPUtil\Log;
  * @package doganoo\PHPUtil\Log
  */
 class FileLogger extends Logger {
+
     private static $path = null;
 
     /**
@@ -53,17 +54,17 @@ class FileLogger extends Logger {
 
     private static function getConfiguration(): array {
         return array(
-            'appenders' => array(
+            'appenders'  => array(
                 'default' => array(
-                    'class' => 'LoggerAppenderFile',
+                    'class'  => 'LoggerAppenderFile',
                     'layout' => array(
-                        'class' => 'LoggerLayoutPattern',
+                        'class'  => 'LoggerLayoutPattern',
                         'params' => array(
                             'conversionPattern' => '%date{Y-m-d H:i:s} %logger %-5level %msg%n'
                         )
                     ),
                     'params' => array(
-                        'file' => FileLogger::getPath(),
+                        'file'   => FileLogger::getPath(),
                         'append' => true,
                     ),
                 ),

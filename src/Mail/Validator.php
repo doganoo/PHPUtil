@@ -28,10 +28,11 @@ namespace doganoo\PHPUtil\Mail;
 /**
  * Class Validator
  *
- * @package doganoo\PHPUtil\Mail
+ * @package    doganoo\PHPUtil\Mail
  * @deprecated use Service/Regex instead
  */
 class Validator {
+
     /**
      * strips all email adresses out of an string. More information at:
      * https://stackoverflow.com/questions/1028553/how-to-get-email-address-from-a-long-string
@@ -52,4 +53,5 @@ class Validator {
         }
         return $emails;
     }
+
 }

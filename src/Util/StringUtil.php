@@ -20,6 +20,7 @@
  */
 
 namespace doganoo\PHPUtil\Util;
+
 use doganoo\PHPUtil\Datatype\StringClass;
 
 /**
@@ -28,6 +29,7 @@ use doganoo\PHPUtil\Datatype\StringClass;
  * @package doganoo\PHPUtil\Util
  */
 final class StringUtil {
+
     /**
      * prevent from instantiation
      * StringUtil constructor.
@@ -64,7 +66,7 @@ final class StringUtil {
      * @throws \Exception
      */
     public static function getUUID(): string {
-        $data = random_bytes(16);
+        $data    = random_bytes(16);
         $data[6] = chr(ord($data[6]) & 0x0f | 0x40);
         $data[8] = chr(ord($data[8]) & 0x3f | 0x80);
         return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
@@ -94,8 +96,9 @@ final class StringUtil {
      * @param string $prefix
      * @return bool
      */
-    public static function hasPrefix(string $string, string $prefix):bool {
+    public static function hasPrefix(string $string, string $prefix): bool {
         $stringClass = new StringClass($string);
         return $stringClass->hasPrefix($prefix);
     }
+
 }

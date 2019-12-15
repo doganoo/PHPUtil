@@ -34,6 +34,7 @@ use doganoo\PHPUtil\Log\Logger;
  * @package doganoo\PHPUtil\HTTP
  */
 class HeaderBuilder {
+
     /** @var bool $replace */
     private $replace = false;
     /** @var int $statusCode */
@@ -87,4 +88,5 @@ class HeaderBuilder {
         \header($this->header, $this->replace, $this->responseCode);
         die();
     }
+
 }

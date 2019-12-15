@@ -55,10 +55,10 @@ class Container {
 
     public function __construct() {
         $this->instances = new HashMap();
-        $this->cache = new HashMap();
+        $this->cache     = new HashMap();
     }
 
-    public function add(string $name, callable $callable):void {
+    public function add(string $name, callable $callable): void {
         $this->instances->add($name, $callable);
     }
 
@@ -66,7 +66,7 @@ class Container {
      * retrieving the container instance.
      *
      * @param string $name
-     * @param array $params
+     * @param array  $params
      *
      * @return mixed|null
      * @throws Exception
@@ -79,14 +79,14 @@ class Container {
             $reflectionClass = new ReflectionClass($name);
             if (false === $reflectionClass->isInstantiable()) return null;
             $constructor = $reflectionClass->getConstructor();
-            $parameters = [];
+            $parameters  = [];
 
             if (null !== $constructor) {
                 /** @var ReflectionParameter $parameter */
                 foreach ($constructor->getParameters() as $parameter) {
                     // TODO is instantiable ?!
                     $className = $parameter->getClass()->getName();
-                    $class = $this->get($className);
+                    $class     = $this->get($className);
                     if (null === $class) throw new ClassNotFoundException();
                     $parameters[] = $class;
                 }
@@ -103,10 +103,10 @@ class Container {
 
     /**
      * @param string $name
-     * @param mixed ...$params
+     * @param mixed  ...$params
      * @return mixed|null
      */
-    private function fromInstances(string $name, ...$params){
+    private function fromInstances(string $name, ...$params) {
         if (false === $this->instances->containsKey($name)) return null;
 
         /** @var Node $node */

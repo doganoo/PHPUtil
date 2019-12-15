@@ -31,6 +31,7 @@ namespace doganoo\PHPUtil\Classloader;
  * @package doganoo\PHPUtil\Classloader
  */
 class AutoLoader {
+
     /**
      * @var string the path where the auto loader should look up
      */
@@ -61,9 +62,9 @@ class AutoLoader {
      * @param $className
      */
     private function loadCore($className) {
-        $parts = explode('\\', $className);
+        $parts     = explode('\\', $className);
         $clazzName = end($parts);
-        $iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($this->path), \RecursiveIteratorIterator::SELF_FIRST);
+        $iterator  = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($this->path), \RecursiveIteratorIterator::SELF_FIRST);
 
         /**
          * @var string        $key
@@ -79,4 +80,5 @@ class AutoLoader {
             }
         }
     }
+
 }

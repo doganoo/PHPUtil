@@ -121,7 +121,7 @@ final class ClassUtil {
             return null;
         }
         $reflectionClass = new \ReflectionClass($object);
-        $properties = $reflectionClass->getProperties();
+        $properties      = $reflectionClass->getProperties();
 
         if ($asString) {
             return ArrayUtil::arrayToString($properties);
@@ -131,7 +131,7 @@ final class ClassUtil {
     }
 
     /**
-     * @param $object
+     * @param      $object
      * @param bool $asObject
      * @return ArrayList|null
      * @throws \ReflectionException
@@ -139,7 +139,7 @@ final class ClassUtil {
     public static function getAllParentClasses($object, bool $asObject = true): ?ArrayList {
         if (!\is_object($object)) return null;
         $reflectionClass = new \ReflectionClass($object);
-        $parentClasses = new ArrayList();
+        $parentClasses   = new ArrayList();
 
         $parentClass = $reflectionClass->getParentClass();
         while (false !== $parentClass) {

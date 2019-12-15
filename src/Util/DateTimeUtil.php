@@ -94,7 +94,7 @@ final class DateTimeUtil {
     }
 
     /**
-     * @param string $date|null
+     * @param string $date |null
      * @return DateTime|null
      */
     public static function fromMysqlDateTime(?string $date): ?DateTime {

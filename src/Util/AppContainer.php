@@ -75,7 +75,7 @@ class AppContainer {
      */
     private static function getInstance(): HashMap {
         if (null === self::$map) {
-            self::$map = new HashMap();
+            self::$map   = new HashMap();
             self::$cache = new HashMap();
         }
         return self::$map;
@@ -85,7 +85,7 @@ class AppContainer {
      * retrieving the container instance.
      *
      * @param string $name
-     * @param array $params
+     * @param array  $params
      *
      * @return mixed|null
      * @throws InvalidKeyTypeException
@@ -96,7 +96,7 @@ class AppContainer {
         // we use the created instance instead
         // TODO: use force create: if user wants to force an new instance
         //      we need to skip the cache
-        if (AppContainer::isCached($name)){
+        if (AppContainer::isCached($name)) {
             return self::$cache->getNodeByKey($name)->getValue();
         }
 
@@ -121,32 +121,32 @@ class AppContainer {
 
     /**
      * @param string $name
-     * @param mixed ...$params
+     * @param mixed  ...$params
      * @return object|null
      */
-    private static function getAutoLoad(string $name, ...$params){
-        try{
+    private static function getAutoLoad(string $name, ...$params) {
+        try {
             $reflectionClass = new ReflectionClass($name);
-            $constructor = $reflectionClass->getConstructor();
-            $parameters = [];
+            $constructor     = $reflectionClass->getConstructor();
+            $parameters      = [];
 
-            if (null !== $constructor){
+            if (null !== $constructor) {
                 /** @var ReflectionParameter $parameter */
-                foreach ($constructor->getParameters() as $parameter){
+                foreach ($constructor->getParameters() as $parameter) {
                     $className = $parameter->getClass()->getName();
-                    $class = AppContainer::get($className);
+                    $class     = AppContainer::get($className);
                     if (null === $class) throw new ClassNotFoundException();
                     $parameters[] = $class;
                 }
             }
             $clazz = $reflectionClass->newInstanceArgs($parameters + $params);
             return $clazz;
-        } catch (ClassNotFoundException $exception){
+        } catch (ClassNotFoundException $exception) {
             return null;
         }
     }
 
-    private static function isCached(string $name):bool {
+    private static function isCached(string $name): bool {
         return true === self::$cache->containsKey($name);
     }
 
@@ -165,7 +165,7 @@ class AppContainer {
      *
      * @param bool $autoLoad
      */
-    public static function setAutoLoad(bool $autoLoad):void {
+    public static function setAutoLoad(bool $autoLoad): void {
         self::$autoLoad = $autoLoad;
     }
 
@@ -174,7 +174,8 @@ class AppContainer {
      *
      * @return bool
      */
-    public static function isAutoLoad():bool {
+    public static function isAutoLoad(): bool {
         return self::$autoLoad;
     }
+
 }

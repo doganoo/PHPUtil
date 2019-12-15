@@ -81,7 +81,7 @@ class Base64 {
      * @param bool $strict
      * @return mixed|null
      */
-    public function decode(bool $strict = true){
+    public function decode(bool $strict = true) {
         if (!$this->encoded) return $this->getData();
         $data = base64_decode($this->getData(), $strict);
         $this->setData($data);
@@ -93,7 +93,7 @@ class Base64 {
      * @param $data
      * @return bool
      */
-    public static function isBase64($data):bool {
+    public static function isBase64($data): bool {
         return true;
         if (null === $data) return false;
         if (!is_string($data)) return false;
@@ -108,7 +108,7 @@ class Base64 {
     /**
      * @return array|null
      */
-    public function getMimeType():?array {
+    public function getMimeType(): ?array {
 
         preg_match(
             "/^data:image\/(.*);base64/i"

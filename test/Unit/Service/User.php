@@ -22,4 +22,5 @@ class User extends TestCase {
         $this->assertTrue(true === $userService->validatePassword("Doganoophputil2", UserService::PASSWORD_VALIDATION_SECURE));
         $this->assertTrue(false === $userService->validatePassword("phputil", UserService::PASSWORD_VALIDATION_SECURE));
     }
+
 }

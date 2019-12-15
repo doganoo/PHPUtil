@@ -35,6 +35,7 @@ use doganoo\PHPUtil\Exception\NoPathException;
  * @package Core\Objects
  */
 class SysProperties {
+
     /**
      * @var null
      */
@@ -60,7 +61,7 @@ class SysProperties {
      * @throws InvalidPropertyStructureException
      */
     public function read(string $index): string {
-        $index = \trim($index);
+        $index      = \trim($index);
         $properties = $this->getProperties();
         if (isset($properties[$index])) {
             return $properties[$index];
@@ -115,4 +116,5 @@ class SysProperties {
         $array = \array_keys($array);
         return $array;
     }
+
 }

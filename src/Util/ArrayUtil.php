@@ -31,6 +31,7 @@ namespace doganoo\PHPUtil\Util;
  * @package doganoo\PHPUtil\Util
  */
 final class ArrayUtil {
+
     /**
      * prevent from instantiation
      * StringUtil constructor.
@@ -41,7 +42,7 @@ final class ArrayUtil {
     /**
      * converts an array to a string using $delimiter as the delimiter between the elements
      *
-     * @param array $array
+     * @param array  $array
      * @param string $delimiter
      * @return string
      */
@@ -61,7 +62,7 @@ final class ArrayUtil {
      * returns a boolean that indicates whether a sequence sums up to a value or not
      *
      * @param array $numbers
-     * @param int $target
+     * @param int   $target
      * @return bool
      */
     public static function hasSum(array $numbers, int $target): bool {
@@ -75,7 +76,7 @@ final class ArrayUtil {
      * returns an array that contains all numbers that sums up to $val
      *
      * @param array $numbers
-     * @param int $target
+     * @param int   $target
      * @return array|null
      */
     public static function sumCollection(array $numbers, int $target): ?array {
@@ -90,7 +91,7 @@ final class ArrayUtil {
 
                     if ($sum === $target) {
                         $collection[] = [$i, $j, $k];
-                        $sum = 0;
+                        $sum          = 0;
                     }
                     if ($sum > $target) continue;
                 }
@@ -98,4 +99,5 @@ final class ArrayUtil {
         }
         return $collection;
     }
+
 }

@@ -34,7 +34,7 @@ class StringUtilTest extends TestCase {
     /**
      * test prefix
      */
-    public function testPrefix(){
+    public function testPrefix() {
         $string = new StringClass("doganucar");
 
         $this->assertTrue(true === $string->hasPrefix("dogan"));
@@ -44,7 +44,7 @@ class StringUtilTest extends TestCase {
 
     }
 
-    public function testSuffix(){
+    public function testSuffix() {
         $string = new StringClass("doganucar");
 
         $this->assertTrue(true === $string->hasSuffix("ucar"));

@@ -33,6 +33,7 @@ namespace doganoo\PHPUtil\Log;
  * @package doganoo\PHPUtil\Log
  */
 class HTMLLogger extends Logger {
+
     private static $path = null;
 
     /**
@@ -53,9 +54,9 @@ class HTMLLogger extends Logger {
 
     private static function getConfiguration(): array {
         return array(
-            'appenders' => array(
+            'appenders'  => array(
                 'default' => array(
-                    'class' => 'LoggerAppenderEcho',
+                    'class'  => 'LoggerAppenderEcho',
                     'layout' => array(
                         'class' => 'LoggerLayoutHtml',
                     )

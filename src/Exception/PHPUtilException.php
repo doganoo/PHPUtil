@@ -33,5 +33,7 @@ use Exception;
  * @package doganoo\PHPUtil\Exception
  */
 class PHPUtilException extends Exception {
+
     protected $message = 'no message specified ¯\_(ツ)_/¯';
+
 }

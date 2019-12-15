@@ -33,6 +33,7 @@ use doganoo\PHPUtil\Exception\InvalidCredentialsException;
  * @package doganoo\PHPUtil\Storage
  */
 class PDOConnector implements IStorageConnector {
+
     /** @var array $credentials */
     private $credentials = null;
     /** @var \PDO $mysqli */
@@ -51,7 +52,7 @@ class PDOConnector implements IStorageConnector {
      */
     public function setCredentials(array $credentials) {
         $this->credentials = $credentials;
-        $this->schemaName = $credentials["dbname"];
+        $this->schemaName  = $credentials["dbname"];
     }
 
     /**
@@ -69,7 +70,7 @@ class PDOConnector implements IStorageConnector {
         if ($this->transactionExists) {
             return false;
         }
-        $started = $this->pdo->beginTransaction();
+        $started                 = $this->pdo->beginTransaction();
         $this->transactionExists = $started;
         return $started;
     }
@@ -80,7 +81,7 @@ class PDOConnector implements IStorageConnector {
      */
     public function commit(): bool {
         if ($this->transactionExists) {
-            $commited = $this->pdo->commit();
+            $commited                = $this->pdo->commit();
             $this->transactionExists = !$commited;
             return $commited;
         }
@@ -93,7 +94,7 @@ class PDOConnector implements IStorageConnector {
      */
     public function rollback(): bool {
         if ($this->transactionExists) {
-            $rolledBack = $this->pdo->rollBack();
+            $rolledBack              = $this->pdo->rollBack();
             $this->transactionExists = !$rolledBack;
             return $rolledBack;
         }
@@ -110,9 +111,9 @@ class PDOConnector implements IStorageConnector {
         if (!$this->hasMinimumCredentials()) {
             throw new InvalidCredentialsException();
         }
-        $host = $this->credentials["servername"];
-        $db = $this->credentials["dbname"];
-        $dsn = "mysql:host=$host;dbname=$db;charset=utf8";
+        $host      = $this->credentials["servername"];
+        $db        = $this->credentials["dbname"];
+        $dsn       = "mysql:host=$host;dbname=$db;charset=utf8";
         $this->pdo = new \PDO($dsn,
             $this->credentials["username"],
             $this->credentials["password"]
@@ -213,11 +214,12 @@ class PDOConnector implements IStorageConnector {
      *
      * @param string $param
      * @param        $value
-     * @param int $dataType
-     * @param null $length
-     * @param null $driverOptions
+     * @param int    $dataType
+     * @param null   $length
+     * @param null   $driverOptions
      */
     public function bindParam(string $param, $value, $dataType = \PDO::PARAM_STR, $length = null, $driverOptions = null) {
         $this->statement->bindParam($param, $value, $dataType, $length, $driverOptions);
     }
+
 }

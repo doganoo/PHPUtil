@@ -30,6 +30,7 @@ namespace doganoo\PHPUtil\Datatype;
  * @package doganoo\PHPUtil\Datatype
  */
 class PasswordClass extends StringClass {
+
     /** @var string PASSWORD_BCRYPT_NAME */
     public const PASSWORD_BCRYPT_NAME = "PASSWORD_BCRYPT";
     /** @var int $algorithm */
@@ -77,8 +78,8 @@ class PasswordClass extends StringClass {
      *
      * @return StringClass|null
      */
-    public function getAlgorithmName():?StringClass{
-        if ($this->getAlgorithm() === PASSWORD_BCRYPT){
+    public function getAlgorithmName(): ?StringClass {
+        if ($this->getAlgorithm() === PASSWORD_BCRYPT) {
             return new StringClass(PasswordClass::PASSWORD_BCRYPT_NAME);
         }
         return null;

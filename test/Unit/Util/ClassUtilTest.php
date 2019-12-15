@@ -42,6 +42,7 @@ class ClassUtilTest extends TestCase {
             $this->assertTrue($class->getName() === X::class || $class->getName() === Y::class);
         }
     }
+
 }
 
 class X {

@@ -31,6 +31,7 @@ namespace doganoo\PHPUtil\Util;
  * @package doganoo\PHPUtil\Util
  */
 final class HTMLUtil {
+
     /**
      * prevent from instantiation
      * StringUtil constructor.
@@ -81,4 +82,5 @@ final class HTMLUtil {
         $newTabString = $newTab ? "target='_blank'" : "";
         return "<a $newTabString href='$link'>";
     }
+
 }

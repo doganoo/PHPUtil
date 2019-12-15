@@ -31,6 +31,7 @@ namespace doganoo\PHPUtil\Storage;
  * @package doganoo\PHPUtil\Storage
  */
 interface IStorageConnector {
+
     /**
      * sets the required credentials for the storage access
      *
@@ -66,4 +67,5 @@ interface IStorageConnector {
      * @return mixed
      */
     public function getConnection();
+
 }

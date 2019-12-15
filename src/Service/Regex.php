@@ -8,7 +8,8 @@ namespace doganoo\PHPUtil\Service;
  * @package doganoo\PHPUtil\Service
  */
 class Regex {
-    public const PHONE_NUMBERS_REGEX = "<^((\\+|00)[1-9]\\d{0,3}|0 ?[1-9]|\\(00? ?[1-9][\\d ]*\\))[\\d\\-/ ]*$>";
+
+    public const PHONE_NUMBERS_REGEX            = "<^((\\+|00)[1-9]\\d{0,3}|0 ?[1-9]|\\(00? ?[1-9][\\d ]*\\))[\\d\\-/ ]*$>";
     public const UNWANTED_CHARS_IN_PHONE_STRING = "/[^0-9\\+\\(\\)\\-\\/]/";
 
     /**
@@ -16,7 +17,7 @@ class Regex {
      * https://stackoverflow.com/questions/1028553/how-to-get-email-address-from-a-long-string
      *
      * @param string $dump
-     * @param bool $unique
+     * @param bool   $unique
      * @return array
      */
     public function stripAddresses(string $dump, bool $unique = true): array {
@@ -35,7 +36,7 @@ class Regex {
 
     /**
      * @param string $dump
-     * @param bool $unique
+     * @param bool   $unique
      * @return array
      */
     public function stripPhoneNumbers(string $dump, bool $unique): array {
@@ -43,14 +44,14 @@ class Regex {
         $numbers = [];
 
         $delimiter = ";";
-        $dump = \str_replace(" ", "", $dump);
-        $res = preg_replace(Regex::UNWANTED_CHARS_IN_PHONE_STRING, $delimiter, $dump);
-        $array = \explode($delimiter, $res);
+        $dump      = \str_replace(" ", "", $dump);
+        $res       = preg_replace(Regex::UNWANTED_CHARS_IN_PHONE_STRING, $delimiter, $dump);
+        $array     = \explode($delimiter, $res);
 
         foreach ($array as $value) {
             if (\preg_match(Regex::PHONE_NUMBERS_REGEX, $value)) {
-                $value = preg_replace("<^\\+>", "00", $value);
-                $value = preg_replace("<\\D+>", "", $value);
+                $value     = preg_replace("<^\\+>", "00", $value);
+                $value     = preg_replace("<\\D+>", "", $value);
                 $numbers[] = $value;
             }
         }
@@ -60,4 +61,5 @@ class Regex {
         }
         return $numbers;
     }
+
 }

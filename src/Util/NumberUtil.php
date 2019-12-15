@@ -26,6 +26,7 @@ namespace doganoo\PHPUtil\Util;
  * @package doganoo\PHPUtil\Util
  */
 final class NumberUtil {
+
     /**
      * prevent from instantiation
      * StringUtil constructor.
@@ -70,13 +71,13 @@ final class NumberUtil {
      *
      * @param float $value
      * @param float $value1
-     * @param bool $gte
+     * @param bool  $gte
      *
      * @return bool
      * @since 1.0.0
      */
     public static function floatGreaterThan(float $value, float $value1, bool $gte = false) {
-        $value = round($value, 10, PHP_ROUND_HALF_EVEN);
+        $value  = round($value, 10, PHP_ROUND_HALF_EVEN);
         $value1 = round($value1, 10, PHP_ROUND_HALF_EVEN);
         if ($gte) {
             return $value >= $value1;
@@ -131,4 +132,5 @@ final class NumberUtil {
     public static function isInteger($value): bool {
         return false !== filter_var($value, FILTER_VALIDATE_INT);
     }
+
 }

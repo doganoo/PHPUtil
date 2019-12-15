@@ -31,9 +31,10 @@ namespace doganoo\PHPUtil\HTTP;
  * @package doganoo\PHPUtil\HTTP
  */
 class URLGenerator {
+
     private $hostName = "localhost";
     private $path;
-    private $secure = true;
+    private $secure   = true;
 
     /**
      * URLGenerator constructor.
@@ -43,7 +44,7 @@ class URLGenerator {
      */
     public function __construct(string $hostName, bool $secure = true) {
         $this->hostName = $hostName;
-        $this->secure = $secure;
+        $this->secure   = $secure;
     }
 
     /**

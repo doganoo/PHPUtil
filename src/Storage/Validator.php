@@ -31,9 +31,10 @@ namespace doganoo\PHPUtil\Storage;
  * @package doganoo\PHPUtil\Storage
  */
 class Validator {
+
     public const INTEGER = 0;
     public const VARCHAR = 1;
-    public const DOUBLE = 3;
+    public const DOUBLE  = 3;
 
     /**
      * Validator constructor.
@@ -94,4 +95,5 @@ class Validator {
         }
         return $valid;
     }
+
 }

@@ -28,7 +28,7 @@ use PHPUnit\Framework\TestCase;
 
 class DateTimeUtilTest extends TestCase {
 
-    public function testValid(){
+    public function testValid() {
 
         $this->assertTrue(true === DateTimeUtil::valid("2019-01-01", "Y-m-d"));
         $this->assertTrue(false === DateTimeUtil::valid("sfsfsdfs", "Y-m-d"));
@@ -37,18 +37,18 @@ class DateTimeUtilTest extends TestCase {
         $this->assertTrue(true === DateTimeUtil::valid("01-02-2018", "d-m-Y"));
     }
 
-    public function testFromMysqlDateTime(){
+    public function testFromMysqlDateTime() {
         $this->assertNull($dateTime = DateTimeUtil::fromMysqlDateTime(null));
         $dateTimeString = "2019-09-20 19:21:47";
-        $dateTime = DateTimeUtil::fromMysqlDateTime($dateTimeString);
+        $dateTime       = DateTimeUtil::fromMysqlDateTime($dateTimeString);
         $this->assertTrue($dateTime->format(DateTimeUtil::MYSQL_DATE_TIME_FORMAT) === $dateTimeString);
     }
 
-    public function testFormatMysqlDateTime(){
+    public function testFormatMysqlDateTime() {
         $this->assertNull(DateTimeUtil::formatMysqlDateTime(null));
         $dateTimeString = "2019-09-20 19:21:47";
-        $dateTime = DateTimeUtil::fromMysqlDateTime($dateTimeString);
-        $formatted = DateTimeUtil::formatMysqlDateTime($dateTime);
+        $dateTime       = DateTimeUtil::fromMysqlDateTime($dateTimeString);
+        $formatted      = DateTimeUtil::formatMysqlDateTime($dateTime);
         $this->assertTrue($formatted === $dateTimeString);
     }
 

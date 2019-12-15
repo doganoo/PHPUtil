@@ -31,6 +31,7 @@ namespace doganoo\PHPUtil\FileSystem;
  * @package doganoo\PHPUtil\FileSystem
  */
 class FileHandler {
+
     /** @var string $path */
     private $path = null;
 
@@ -57,7 +58,7 @@ class FileHandler {
      * @param string $path
      */
     public function setPath(string $path): void {
-        $this->path = $path;
+        $this->path    = $path;
         $this->content = null;
     }
 

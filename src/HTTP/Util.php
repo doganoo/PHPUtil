@@ -30,6 +30,7 @@ namespace doganoo\PHPUtil\HTTP;
  * @package doganoo\PHPUtil\HTTP
  */
 class Util {
+
     /**
      * Singleton
      * Util constructor.
@@ -50,10 +51,10 @@ class Util {
      *
      * @return string|null
      */
-    public static function getServerURL(){
-        $https = $_SERVER['HTTPS'] ?? null;
-        $protocol = $https === "on" ? "https" : "http";
-        $host = $_SERVER['HTTP_HOST'] ?? null;
+    public static function getServerURL() {
+        $https      = $_SERVER['HTTPS'] ?? null;
+        $protocol   = $https === "on" ? "https" : "http";
+        $host       = $_SERVER['HTTP_HOST'] ?? null;
         $requestUri = $_SERVER['REQUEST_URI'] ?? null;
 
         if (null === $host || null === $requestUri) return null;

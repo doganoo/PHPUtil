@@ -31,6 +31,7 @@ namespace doganoo\PHPUtil\Datatype;
  * @package doganoo\PHPUtil\System
  */
 class StringClass {
+
     /**
      * @var string
      */
@@ -64,7 +65,7 @@ class StringClass {
      *
      * @return string
      */
-    public function getValue():?string {
+    public function getValue(): ?string {
         return $this->value;
     }
 
@@ -88,7 +89,7 @@ class StringClass {
             $value = $value->getValue();
         }
         if (!is_string($value)) return false;
-            return strcasecmp($this->value, $value) === 0;
+        return strcasecmp($this->value, $value) === 0;
     }
 
     /**
@@ -182,7 +183,7 @@ class StringClass {
         return $return;
     }
 
-    public function getLength():int{
+    public function getLength(): int {
         if (null === $this->getValue()) return 0;
         return strlen($this->getValue());
     }
@@ -195,9 +196,9 @@ class StringClass {
      * @param string $prefix
      * @return bool
      */
-    public function hasPrefix(string $prefix):bool {
+    public function hasPrefix(string $prefix): bool {
         if (0 !== $this->getLength() && "" === $prefix) return false;
-        return true === (substr( $this->getValue(), 0, strlen($prefix)) === $prefix);
+        return true === (substr($this->getValue(), 0, strlen($prefix)) === $prefix);
     }
 
     /**
@@ -206,8 +207,9 @@ class StringClass {
      * @param string $suffix
      * @return bool
      */
-    public function hasSuffix(string $suffix):bool {
+    public function hasSuffix(string $suffix): bool {
         if (0 !== $this->getLength() && "" === $suffix) return false;
         return (substr($this->getValue(), -1 * strlen($suffix), strlen($suffix)) === $suffix);
     }
+
 }

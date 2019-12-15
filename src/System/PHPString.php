@@ -28,10 +28,11 @@ namespace doganoo\PHPUtil\System;
 /**
  * Class PString - bases on Java String class
  *
- * @package doganoo\PHPUtil\System
+ * @package    doganoo\PHPUtil\System
  * @deprecated use doganoo\PHPUtil\Datatype\StringClass instead
  */
 class PHPString {
+
     /**
      * @var string
      */
@@ -180,4 +181,5 @@ class PHPString {
         $return = substr($this->value, 0, $count);
         return $return;
     }
+
 }

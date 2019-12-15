@@ -52,13 +52,13 @@ class Logger {
     public const NORMAL = 1;
     /** @var int DESCRIPTIVE */
     public const DESCRIPTIVE = 2;
-    public const ECHO = 0;
+    public const ECHO        = 0;
     /** @var int $level */
     private static $level = self::ERROR;
     /** @var string $EOL */
     private static $EOL = "\n";
     /** @var int $mode */
-    private static $mode = Logger::SIMPLE;
+    private static $mode   = Logger::SIMPLE;
     private static $config = null;
 
 
@@ -131,7 +131,7 @@ class Logger {
      * logs a message to the console
      *
      * @param string $message
-     * @param int $level
+     * @param int    $level
      */
     private static function log(string $message, int $level) {
         \Logger::configure(self::getConfiguration());
@@ -168,11 +168,11 @@ class Logger {
 
     private static function getDefaultConfiguration() {
         return array(
-            'appenders' => array(
+            'appenders'  => array(
                 'default' => array(
-                    'class' => 'LoggerAppenderEcho',
+                    'class'  => 'LoggerAppenderEcho',
                     'layout' => array(
-                        'class' => 'LoggerLayoutPattern',
+                        'class'  => 'LoggerLayoutPattern',
                         'params' => array(
                             'conversionPattern' => '%date{Y-m-d H:i:s} %logger %-5level %msg%n'
                         )

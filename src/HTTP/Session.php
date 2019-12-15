@@ -25,116 +25,101 @@
 
 namespace doganoo\PHPUtil\HTTP;
 
+use JsonSerializable;
+
 /**
  * Class Session
  *
  * @package doganoo\PHPUtil\HTTP
  */
-class Session implements \JsonSerializable {
-    private $started = false;
+class Session implements JsonSerializable {
 
     /**
-     * Session constructor.
+     * starts the session: https://stackoverflow.com/a/17399989
+     *
+     * @return bool
      */
-    public function __construct() {
-        /**
-         * see: https://stackoverflow.com/a/17399989
-         */
-        if (session_id() == '' || !isset ($_SESSION)) {
-            $this->started = session_start();
+    public function start(): bool {
+        if (false === $this->isStarted()) {
+            return session_start();
         }
-    }
-
-    /**
-     * reads an array from the session
-     *
-     * @param $index
-     * @return array
-     */
-    public function readArray($index) {
-        return isset ($_SESSION [$index]) && is_array($_SESSION [$index]) ? $_SESSION [$index] : [];
-    }
-
-    /**
-     * sets an array to the session
-     *
-     * @param $index
-     * @param $value
-     */
-    public function setArray($index, $value) {
-        $_SESSION [$index] [] = $value;
-    }
-
-    /**
-     * destroys the whole session
-     */
-    public function destroy() {
-        session_unset();
-        session_destroy();
-        $_SESSION = array();
-        setcookie(session_name(), "", 0, "/");
+        return false;
     }
 
     /**
      * deletes an value in the session
      *
-     * @param $index
+     * @param string $index
      */
-    public function unset($index) {
-        unset ($_SESSION [$index]);
-    }
-
-    /**
-     * returns the session name
-     *
-     * @return string
-     */
-    public function getName() {
-        return session_name();
+    public function remove(string $index): void {
+        $_SESSION[$index] = null;
+        unset ($_SESSION[$index]);
     }
 
     /**
      * reads an index from the session
      *
-     * @param $index
-     * @return string
+     * @param string $index
+     * @param null   $default
+     * @return string|null
      */
-    public function read($index) {
-        return isset ($_SESSION [$index]) ? trim($_SESSION [$index]) : "";
+    public function get(string $index, $default = null): ?string {
+        return $_SESSION[$index] ?? $default;
     }
 
     /**
      * sets an session element
      *
-     * @param $index
-     * @param $value
+     * @param string $index
+     * @param string $value
      */
-    public function set($index, $value) {
-        $_SESSION [$index] = $value;
+    public function set(string $index, string $value) {
+        $_SESSION[$index] = $value;
     }
 
     /**
      * regenerates the session
+     *
+     * @param bool $deleteOldSession
+     * @return bool
      */
-    public function regenerateSessionId() {
-        session_regenerate_id(true);
+    public function regenerateSessionId(bool $deleteOldSession = true): bool {
+        return session_regenerate_id($deleteOldSession);
     }
 
     /**
      * @return bool
      */
     public function isStarted(): bool {
-        return $this->started;
+        return false === (session_id() === '' || !isset ($_SESSION));
+    }
+
+    /**
+     * @return array
+     */
+    public function getAll(): array {
+        return $_SESSION;
+    }
+
+    /**
+     * destroys the whole session
+     */
+    public function destroy(): void {
+        session_unset();
+        session_destroy();
+        $_SESSION = [];
+        setcookie(session_name(), "", 0, "/");
     }
 
     /**
      * Specify data which should be serialized to JSON
-     * @link https://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @link  https://php.net/manual/en/jsonserializable.jsonserialize.php
      * @return mixed data which can be serialized by <b>json_encode</b>,
      * which is a value of any type other than a resource.
      * @since 5.4.0
      */
     public function jsonSerialize() {
-        return $_SESSION;
+        return $this->getAll();
     }
+
 }
