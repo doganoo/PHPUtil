@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * MIT License
  *
@@ -28,65 +29,62 @@ namespace doganoo\PHPUtil\System;
 use doganoo\PHPUtil\Exception\FileNotFoundException;
 use doganoo\PHPUtil\Exception\InvalidPropertyStructureException;
 use doganoo\PHPUtil\Exception\NoPathException;
+use function array_keys;
+use function count;
+use function is_file;
+use function trim;
 
 /**
- * Class SysProperties
- *
- * @package Core\Objects
+ * Class Properties
+ * @package doganoo\PHPUtil\System
+ * @author  Dogan Ucar <dogan@dogan-ucar.de>
  */
-class SysProperties {
+class Properties {
+
+    /** @var string */
+    private $path;
+
+    /** @var array */
+    private $properties;
 
     /**
-     * @var null
-     */
-    private static $path = null;
-
-    /**
-     * @var null|array $properties
-     */
-    private $properties = null;
-
-    /**
+     * Properties constructor.
      * @param string $path
      */
-    public static function setPropertiesPath(string $path) {
-        self::$path = $path;
+    public function __construct(string $path) {
+        $this->path = $path;
     }
 
     /**
-     * @param string $index
-     * @return string
-     * @throws FileNotFoundException
-     * @throws NoPathException
-     * @throws InvalidPropertyStructureException
+     * reads the property value assigned to $key
+     * @param string $key
+     * @return string|null
      */
-    public function read(string $index): string {
-        $index      = \trim($index);
-        $properties = $this->getProperties();
-        if (isset($properties[$index])) {
-            return $properties[$index];
-        } else {
-            throw new \InvalidArgumentException();
-        }
+    public function read(string $key): ?string {
+        $key        = trim($key);
+        $properties = $this->loadProperties();
+        return $this->properties[$key] ?? null;
     }
 
     /**
+     * loads the ini file located at a given path
+     *
      * @return array
      * @throws FileNotFoundException
-     * @throws NoPathException
      * @throws InvalidPropertyStructureException
+     * @throws NoPathException
      */
-    private function getProperties(): array {
+    private function loadProperties(): array {
         if (null !== $this->properties) {
             return $this->properties;
         }
-        if (self::$path === null) {
+        if (null === $this->path) {
             throw new NoPathException();
         }
-        if (!\is_file(self::$path)) {
+        if (!is_file($this->path)) {
             throw new FileNotFoundException();
         }
-        $ini = parse_ini_file(self::$path);
+        $ini = parse_ini_file($this->path);
         if (false === $ini) {
             throw new InvalidPropertyStructureException();
         }
@@ -95,26 +93,23 @@ class SysProperties {
     }
 
     /**
+     * returns the number of properties
+     *
      * @return int
-     * @throws FileNotFoundException
-     * @throws InvalidPropertyStructureException
-     * @throws NoPathException
      */
     public function size(): int {
-        $properties = $this->getProperties();
-        return \count($properties);
+        $properties = $this->loadProperties();
+        return count($properties);
     }
 
     /**
+     * returns the key set of the properties
+     *
      * @return array
-     * @throws FileNotFoundException
-     * @throws InvalidPropertyStructureException
-     * @throws NoPathException
      */
     public function keySet(): array {
-        $array = $this->getProperties();
-        $array = \array_keys($array);
-        return $array;
+        $array = $this->loadProperties();
+        return array_keys($array);
     }
 
 }
