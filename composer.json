@@ -21,7 +21,8 @@
     "ext-fileinfo": "*",
     "ext-iconv": "*",
     "ext-mbstring": "*",
-    "ext-json": "*"
+    "ext-json": "*",
+    "ext-pdo": "*"
   },
   "require-dev": {
     "phpunit/phpunit": "^6"

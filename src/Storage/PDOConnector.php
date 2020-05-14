@@ -26,6 +26,8 @@
 namespace doganoo\PHPUtil\Storage;
 
 use doganoo\PHPUtil\Exception\InvalidCredentialsException;
+use PDO;
+use PDOStatement;
 
 /**
  * Class MySQLConnector
@@ -36,9 +38,9 @@ class PDOConnector implements IStorageConnector {
 
     /** @var array $credentials */
     private $credentials = null;
-    /** @var \PDO $mysqli */
+    /** @var PDO $mysqli */
     private $pdo = null;
-    /** @var \PDOStatement $statement */
+    /** @var PDOStatement $statement */
     private $statement = null;
     /** @var bool $transactionExists */
     private $transactionExists = false;
@@ -64,6 +66,7 @@ class PDOConnector implements IStorageConnector {
 
     /**
      * starts a database transaction
+     *
      * @return bool
      */
     public function startTransaction(): bool {
@@ -77,6 +80,7 @@ class PDOConnector implements IStorageConnector {
 
     /**
      * commits a started database transaction
+     *
      * @return bool
      */
     public function commit(): bool {
@@ -90,6 +94,7 @@ class PDOConnector implements IStorageConnector {
 
     /**
      * rolls a started transaction back
+     *
      * @return bool
      */
     public function rollback(): bool {
@@ -113,12 +118,13 @@ class PDOConnector implements IStorageConnector {
         }
         $host      = $this->credentials["servername"];
         $db        = $this->credentials["dbname"];
-        $dsn       = "mysql:host=$host;dbname=$db;charset=utf8";
-        $this->pdo = new \PDO($dsn,
+        $charSet   = $this->credentials["charset"] ?? 'utf8';
+        $dsn       = "mysql:host=$host;dbname=$db;charset=$charSet";
+        $this->pdo = new PDO($dsn,
             $this->credentials["username"],
             $this->credentials["password"]
         );
-        $this->pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+        $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         return $this->pdo !== null;
     }
 
@@ -147,9 +153,10 @@ class PDOConnector implements IStorageConnector {
      * prepares a SQL statement
      *
      * @param string $sql
-     * @return null|\PDOStatement
+     *
+     * @return null|PDOStatement
      */
-    public function prepare(string $sql): ?\PDOStatement {
+    public function prepare(string $sql): ?PDOStatement {
         $statement = $this->getConnection()->prepare($sql);
         if ($statement === false) {
             return null;
@@ -161,7 +168,7 @@ class PDOConnector implements IStorageConnector {
     /**
      * returns the connection
      *
-     * @return \PDO|null
+     * @return PDO|null
      */
     public function getConnection() {
         if (!$this->hasMinimumCredentials()) {
@@ -203,6 +210,7 @@ class PDOConnector implements IStorageConnector {
 
     /**
      * @param null $name
+     *
      * @return string
      */
     public function getLastInsertId($name = null) {
@@ -218,7 +226,7 @@ class PDOConnector implements IStorageConnector {
      * @param null   $length
      * @param null   $driverOptions
      */
-    public function bindParam(string $param, $value, $dataType = \PDO::PARAM_STR, $length = null, $driverOptions = null) {
+    public function bindParam(string $param, $value, $dataType = PDO::PARAM_STR, $length = null, $driverOptions = null) {
         $this->statement->bindParam($param, $value, $dataType, $length, $driverOptions);
     }
 
