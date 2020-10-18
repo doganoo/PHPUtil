@@ -1,21 +1,21 @@
 <?php
 
-namespace doganoo\PHPUtil\IntegrationTest;
+namespace doganoo\PHPUtil\Test\Integration\FileSystem;
 
-use doganoo\PHPUtil\IntegrationTest\Base\ITest;
+use PHPUnit\Framework\TestCase;
 
-class DirHandler implements ITest {
+class DirHandler extends TestCase {
 
     public function setUp(): void {
-        // TODO: Implement setUp() method.
+        // silence is golden
     }
 
-    public function run(): bool {
-        // TODO: Implement run() method.
+    public function testDirHandler(): void {
+        $this->markTestSkipped('silence is golden');
     }
 
     public function tearDown(): void {
-        // TODO: Implement tearDown() method.
+        // silence is golden
     }
 
 }
