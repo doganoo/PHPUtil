@@ -64,7 +64,15 @@ class Session implements JsonSerializable {
      * @return string|null
      */
     public function get(string $index, $default = null): ?string {
-        return $_SESSION[$index] ?? $default;
+        if (isset($_SESSION[$index])) {
+            return $_SESSION[$index];
+        }
+
+        if (null === $default) {
+            return null;
+        }
+
+        return $default;
     }
 
     /**
@@ -91,7 +99,7 @@ class Session implements JsonSerializable {
      * @return bool
      */
     public function isStarted(): bool {
-        return false === (session_id() === '' || !isset ($_SESSION));
+        return session_status() === PHP_SESSION_ACTIVE;
     }
 
     /**
