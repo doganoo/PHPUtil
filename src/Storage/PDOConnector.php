@@ -26,6 +26,7 @@
 namespace doganoo\PHPUtil\Storage;
 
 use doganoo\PHPUtil\Exception\InvalidCredentialsException;
+use doganoo\PHPUtil\Exception\PHPUtilException;
 use PDO;
 use PDOStatement;
 
@@ -154,12 +155,13 @@ class PDOConnector implements IStorageConnector {
      *
      * @param string $sql
      *
-     * @return null|PDOStatement
+     * @return PDOStatement
+     * @throws PHPUtilException
      */
-    public function prepare(string $sql): ?PDOStatement {
+    public function prepare(string $sql): PDOStatement {
         $statement = $this->getConnection()->prepare($sql);
         if ($statement === false) {
-            return null;
+            throw new PHPUtilException('cout not prepare');
         }
         $this->statement = $statement;
         return $statement;
