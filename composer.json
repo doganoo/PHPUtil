@@ -17,7 +17,6 @@
   },
   "require": {
     "doganoo/php-algorithms": "*",
-    "apache/log4php": "2.3.0",
     "ext-fileinfo": "*",
     "ext-iconv": "*",
     "ext-mbstring": "*",
