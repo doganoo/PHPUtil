@@ -15,6 +15,9 @@
       "doganoo\\PHPUtil\\Test\\": "test/"
     }
   },
+  "conflict": {
+    "stevebauman/unfinalize": "*"
+  },
   "require": {
     "doganoo/php-algorithms": "*",
     "ext-fileinfo": "*",
